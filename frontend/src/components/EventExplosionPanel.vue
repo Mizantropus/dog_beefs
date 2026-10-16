@@ -1,7 +1,7 @@
 <template>
   <div v-if="pending" class="exp panel">
     <h3>Взрыв! Проверка авторитета</h3>
-    <p class="hint">Район {{ districtName }} · Пёс игрока {{ current + 1 }} ({{ idx + 1 }} / {{ queue.length }})</p>
+    <p class="hint">Район {{ districtName }} · Пёс {{ pname(current) }} ({{ idx + 1 }} / {{ queue.length }})</p>
     <div v-if="value != null" class="die-wrap">
       <DiceCube :key="idx + ':' + face" :face="face" :size="56" />
       <img :src="tokenImage" :alt="tokenLabel" :title="tokenLabel" class="tok-img" />
@@ -12,7 +12,7 @@
       <button v-if="value == null" class="primary" :disabled="!myTurn" @click="roll">Бросить кубик</button>
       <button v-else class="primary" :disabled="!myTurn || reactionOpen" @click="ok">ОК</button>
     </div>
-    <p v-if="!myTurn" class="hint">Ход игрока {{ current + 1 }}…</p>
+    <p v-if="!myTurn" class="hint">Ход {{ pname(current) }}…</p>
   </div>
 </template>
 
@@ -57,6 +57,10 @@ export default {
     }
   },
   methods: {
+    pname(seat) {
+      const p = (this.state.players || [])[Number(seat)]
+      return (p && p.name) || ('Игрок ' + (Number(seat) + 1))
+    },
     roll() { this.$emit('command', { type: 'event_explosion', action: 'roll', seat: this.mySeat }) },
     ok() { this.$emit('command', { type: 'event_explosion', action: 'ok', seat: this.mySeat }) }
   }

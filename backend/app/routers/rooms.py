@@ -2,15 +2,15 @@
 from fastapi import APIRouter, Header, HTTPException
 
 from .. import rooms
-from ..schemas import (CreateRoomRequest, CreateRoomResponse, JoinRoomResponse,
-                       RoomOut, StartRoomResponse)
+from ..schemas import (CreateRoomRequest, CreateRoomResponse, JoinRoomRequest,
+                       JoinRoomResponse, RoomOut, StartRoomResponse)
 
 router = APIRouter(prefix="/api/rooms", tags=["rooms"])
 
 
 @router.post("", response_model=CreateRoomResponse, status_code=201)
 async def create_room(payload: CreateRoomRequest):
-    room = await rooms.create_room(payload.player_count)
+    room = await rooms.create_room(payload.player_count, payload.name)
     return CreateRoomResponse(code=room.code, token=room.host_token, seat=0,
                               player_count=room.player_count)
 
@@ -24,13 +24,14 @@ async def get_room(code: str):
     return RoomOut(code=room.code, player_count=room.player_count,
                    status=room.status,
                    seats_taken=[t is not None for t in room.seats],
+                   names=room.names or [],
                    game_id=room.game_id)
 
 
 @router.post("/{code}/join", response_model=JoinRoomResponse)
-async def join_room(code: str):
+async def join_room(code: str, payload: JoinRoomRequest):
     try:
-        token, seat = await rooms.join_room(code)
+        token, seat = await rooms.join_room(code, payload.name)
     except rooms.RoomNotFound:
         raise HTTPException(status_code=404, detail="Комната не найдена")
     except rooms.RoomNotJoinable as e:

@@ -3,7 +3,7 @@ import asyncio
 import json
 from pathlib import Path
 
-from sqlalchemy import delete
+from sqlalchemy import delete, text
 
 from .db import Base, async_session, engine
 from .models import (ActionCard, ActionDefinition, BoardLayout, District,
@@ -24,6 +24,8 @@ async def _reload(session, model, rows):
 async def seed() -> None:
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        # миграция для старых БД: добавить недостающие колонки (идемпотентно)
+        await conn.execute(text("ALTER TABLE rooms ADD COLUMN IF NOT EXISTS names JSON"))
 
     async with async_session() as session:
         await _reload(session, District, load("districts.json"))

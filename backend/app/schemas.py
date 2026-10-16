@@ -73,10 +73,15 @@ class BoardDetailOut(BaseModel):
 
 class CreateGameRequest(BaseModel):
     player_count: int = Field(ge=2, le=4)
-    seed: int = 0
+    seed: int | None = None
 
 class CreateRoomRequest(BaseModel):
     player_count: int = Field(ge=2, le=4)
+    name: str = Field(min_length=1, max_length=24)
+
+
+class JoinRoomRequest(BaseModel):
+    name: str = Field(min_length=1, max_length=24)
 
 
 class RoomOut(BaseModel):
@@ -84,6 +89,7 @@ class RoomOut(BaseModel):
     player_count: int
     status: str
     seats_taken: list[bool]
+    names: list[str | None] = []
     game_id: str | None = None
 
 

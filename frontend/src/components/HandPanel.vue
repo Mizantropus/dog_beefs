@@ -22,7 +22,7 @@
       <span v-if="!kompromat.length" class="hint">нет</span>
       <select v-if="kompromat.length" v-model="discardTarget" :disabled="!myTurn || hasPlayed">
         <option v-for="t in kompromatTargets" :key="'t' + t" :value="t">
-          {{ t === mySeat ? 'на себя' : 'на игрока ' + (t + 1) }}
+          {{ t === mySeat ? 'на себя' : 'на ' + pname(t) }}
         </option>
       </select>
     </div>
@@ -69,6 +69,10 @@ export default {
     }
   },
   methods: {
+    pname(seat) {
+      const p = (this.state.players || [])[Number(seat)]
+      return (p && p.name) || ('Игрок ' + (Number(seat) + 1))
+    },
     onPlayCard(cid) { this.$emit('play-card', cid) },
     endTurn() { this.$emit('command', { type: 'end_turn', seat: this.mySeat }) },
     pass() { this.$emit('command', { type: 'pass', seat: this.mySeat }) },

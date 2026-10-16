@@ -122,6 +122,7 @@ class Room(Base):
     status: Mapped[str] = mapped_column(String(16), default="waiting")  # waiting | playing | finished
     host_token: Mapped[str] = mapped_column(String(64))              # токен хоста (он же игрок seat 0)
     seats: Mapped[list] = mapped_column(JSON)                        # list[str|None], индекс = seat
+    names: Mapped[list] = mapped_column(JSON, default=list)           # list[str|None], индекс = seat
     game_id: Mapped[str | None] = mapped_column(String(36), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 

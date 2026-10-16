@@ -233,6 +233,10 @@ export default {
     }
   },
   methods: {
+    pname(seat) {
+      const p = (this.state.players || [])[Number(seat)]
+      return (p && p.name) || ('Игрок ' + (Number(seat) + 1))
+    },
     coord(id) {
       const c = HEX_COORDS[this.state.player_count] || {}
       return c[id] || [0, 0]
@@ -299,7 +303,7 @@ export default {
     },
     bombInfo(b) {
       if (!b.active) return 'Взрывчатка · неактивная'
-      const owner = b.owner != null && b.owner !== undefined ? ('игрок ' + (b.owner + 1)) : 'без владельца'
+      const owner = b.owner != null && b.owner !== undefined ? this.pname(b.owner) : 'без владельца'
       return 'Взрывчатка · ' + owner + ' · активная'
     },
     resSummary(id) {

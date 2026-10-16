@@ -48,15 +48,16 @@ def seat_for_token(room: Room, token: str | None) -> int | None:
     return None
 
 
-async def create_room(player_count: int) -> Room:
+async def create_room(player_count: int, host_name: str) -> Room:
     token = _gen_token()
     seats = [token] + [None] * (player_count - 1)  # хост сразу занимает seat 0
+    names = [host_name] + [None] * (player_count - 1)
     for _ in range(20):
         code = _gen_code()
         async with async_session() as session:
             if await session.get(Room, code) is None:
                 room = Room(code=code, player_count=player_count, status="waiting",
-                            host_token=token, seats=seats)
+                            host_token=token, seats=seats, names=names)
                 session.add(room)
                 await session.commit()
                 return room
@@ -71,7 +72,7 @@ async def get_room(code: str) -> Room:
         return room
 
 
-async def join_room(code: str) -> tuple[str, int]:
+async def join_room(code: str, name: str) -> tuple[str, int]:
     """Занять первое свободное место. Возвращает (token, seat)."""
     async with async_session() as session:
         room = await session.get(Room, code)
@@ -80,11 +81,16 @@ async def join_room(code: str) -> tuple[str, int]:
         if room.status != "waiting":
             raise RoomNotJoinable("Комната уже играет или завершена")
         seats = list(room.seats)
+        names = list(room.names or [])
+        while len(names) < len(seats):
+            names.append(None)
         for seat, t in enumerate(seats):
             if t is None:
                 token = _gen_token()
                 seats[seat] = token
+                names[seat] = name
                 room.seats = seats
+                room.names = names
                 await session.commit()
                 return token, seat
         raise RoomNotJoinable("Комната заполнена")
@@ -131,6 +137,9 @@ async def start_game(code: str, host_token: str) -> str:
 
         state = prepare_game(room.player_count, secrets.randbelow(2**31),
                              action_cards, event_cards, districts, hex_edges)
+        for seat, nm in enumerate(room.names or []):
+            if nm:
+                state.players[seat].name = nm
         session.add(Game(id=state.id, version=state.version, status="active",
                          state=state.model_dump(mode="json")))
         room.game_id = state.id

@@ -161,6 +161,9 @@ def _apply_combat_effect(state: GameState, roller: int, face: int, move_seat: in
                 d.kompromat.append(enemy)
             else:
                 state.players[roller].kompromat.append(enemy)
+        else:
+            # бой с шелудивыми: выдаём компромат на себя в личный запас
+            state.players[roller].kompromat.append(roller)
     return True
 
 

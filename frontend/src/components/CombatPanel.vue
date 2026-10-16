@@ -111,7 +111,7 @@ export default {
       const seats = this.combat.defender !== null ? [this.combat.attacker, this.combat.defender] : [this.combat.attacker]
       for (const seat of seats) {
         for (let i = 0; i < (dogs[seat] || 0); i++) {
-          opts.push({ value: Number(seat), text: 'Пёс игрока ' + (Number(seat) + 1) })
+          opts.push({ value: Number(seat), text: 'Пёс ' + this.playerName(seat) })
         }
       }
       if ((d.mangy || 0) > 0) opts.push({ value: -1, text: 'Шелудивый' })
@@ -129,7 +129,8 @@ export default {
   methods: {
     dieFaceImage,
     playerName(seat) {
-      return 'Игрок ' + (Number(seat) + 1)
+      const p = (this.state.players || [])[Number(seat)]
+      return (p && p.name) || ('Игрок ' + (Number(seat) + 1))
     },
     faceLabel(seat, face) {
       const line = (this.state.players[seat] || {}).combat_line || []

@@ -14,7 +14,7 @@
 
     <div v-else-if="slug === 'cherny_rynok_kompromata'" class="form">
       <select v-model="targetSeat">
-        <option v-for="s in otherSeats" :key="s" :value="s">Игрок {{ s + 1 }}</option>
+        <option v-for="s in otherSeats" :key="s" :value="s">{{ pname(s) }}</option>
       </select>
       <input v-model.number="count" type="number" min="1" />
       <button class="primary" @click="act({ target_seat: targetSeat, count: count })">Купить (по 600$)</button>
@@ -44,7 +44,7 @@
         <option v-for="o in blackFridayOptions" :key="o.value" :value="o.value">{{ o.text }} ({{ o.cost }}$)</option>
       </select>
       <select v-if="choice === 'kompromat'" v-model="targetSeat">
-        <option v-for="s in otherSeats" :key="s" :value="s">Игрок {{ s + 1 }}</option>
+        <option v-for="s in otherSeats" :key="s" :value="s">{{ pname(s) }}</option>
       </select>
       <select v-if="choice === 'mangy'" v-model="districtId">
         <option v-for="d in mangyDistricts" :key="d.value" :value="d.value">{{ d.text }}</option>
@@ -139,6 +139,10 @@ export default {
     }
   },
   methods: {
+    pname(seat) {
+      const p = (this.state.players || [])[Number(seat)]
+      return (p && p.name) || ('Игрок ' + (Number(seat) + 1))
+    },
     eventCardImage,
     name(id) {
       return (this.districts[id] && this.districts[id].name) ? (id + '·' + this.districts[id].name) : ('Район ' + id)

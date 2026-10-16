@@ -82,7 +82,7 @@ export default {
       return opts
     },
     playerOptions() {
-      return (this.state.players || []).map((p) => ({ value: p.seat, text: 'Игрок ' + (p.seat + 1) }))
+      return (this.state.players || []).map((p) => ({ value: p.seat, text: p.name || ('Игрок ' + (p.seat + 1)) }))
     }
   },
   created() {

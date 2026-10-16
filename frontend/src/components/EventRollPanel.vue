@@ -2,7 +2,7 @@
   <div v-if="pending" class="roll panel">
     <h3>{{ title }}</h3>
     <p v-if="isRuletka" class="hint">Целевая масть: <img :src="dieFaceImage(target)" :alt="suitSymbol(target)" class="die-img" /></p>
-    <p class="turn">Ходит: игрок {{ current + 1 }}</p>
+    <p class="turn">Ходит: {{ pname(current) }}</p>
 
     <div v-if="!rolled" class="btns">
       <button v-if="current === mySeat" class="primary" @click="roll">Бросить кубик</button>
@@ -85,13 +85,17 @@ export default {
         const v = this.pending.results[seat]
         if (v == null) continue
         const label = this.isRuletka ? this.suitSymbol(v) : String(v)
-        parts.push('Игрок ' + (seat + 1) + ': ' + label)
+        parts.push(this.pname(seat) + ': ' + label)
       }
       return parts.length ? 'Броски: ' + parts.join(' · ') : ''
     }
   },
   methods: {
     dieFaceImage,
+    pname(seat) {
+      const p = (this.state.players || [])[Number(seat)]
+      return (p && p.name) || ('Игрок ' + (Number(seat) + 1))
+    },
     suitSymbol(face) { return DIE_SYMBOLS[face] || '?' },
     roll() { this.$emit('command', { type: 'event_roll', seat: this.mySeat, action: 'roll' }) },
     ok() { this.$emit('command', { type: 'event_roll', seat: this.mySeat, action: 'ok' }) }

@@ -13,7 +13,7 @@
           v-for="t in kompromatTargets"
           :key="'k' + t"
           @click="play(a, t)"
-        >компромат {{ t === mySeat ? 'на себя' : 'на игрока ' + (t + 1) }}</button>
+        >компромат {{ t === mySeat ? 'на себя' : 'на ' + pname(t) }}</button>
       </div>
     </div>
     <div class="btns">
@@ -64,6 +64,10 @@ export default {
     }
   },
   methods: {
+    pname(seat) {
+      const p = (this.state.players || [])[Number(seat)]
+      return (p && p.name) || ('Игрок ' + (Number(seat) + 1))
+    },
     amIEligible,
     actionLabel(a) {
       return SITUATIONAL_LABELS[a] || a

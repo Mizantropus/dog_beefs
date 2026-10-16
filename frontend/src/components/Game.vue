@@ -49,7 +49,7 @@
       <DiscardModal v-if="showDiscard" :state="state" :actions="actionMap" @close="showDiscard = false" />
       <div v-if="viewSeat !== null" class="board-modal" @click.self="viewSeat = null">
         <div class="board-modal-box">
-          <PlayerBoard :state="state" :my-seat="viewSeat" :title="'Планшет игрока ' + (viewSeat + 1)" :collapsible="false" />
+          <PlayerBoard :state="state" :my-seat="viewSeat" :title="'Планшет — ' + pname(viewSeat)" :collapsible="false" />
           <button class="ghost" @click="viewSeat = null">Закрыть</button>
         </div>
       </div>
@@ -206,6 +206,10 @@ export default {
     if (this.ws) this.ws.close()
   },
   methods: {
+    pname(seat) {
+      const p = (this.state.players || [])[Number(seat)]
+      return (p && p.name) || ('Игрок ' + (Number(seat) + 1))
+    },
     actionCardBack,
     eventCardBack,
     connect() {

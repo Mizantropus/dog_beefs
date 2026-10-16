@@ -3,7 +3,12 @@
     <!-- Главный экран: создать комнату или войти по коду -->
     <div v-if="!roomCode" class="home">
       <h1 class="title">Собачьи тёрки</h1>
-      <p class="subtitle">Онлайн-игра за районы города · 2–4 игрока</p>
+      <p class="subtitle">Онлайн-игра, в которой вы будете биться за контроль над районами города. 2–4 игрока</p>
+
+      <div class="card">
+        <h2>Ваше имя</h2>
+        <input v-model="name" class="code-input name-input" placeholder="ИМЯ" maxlength="24" />
+      </div>
 
       <div class="card">
         <h2>Создать комнату</h2>
@@ -13,7 +18,7 @@
             <span>{{ n }} игрока</span>
           </label>
         </div>
-        <button class="primary" @click="createRoom" :disabled="busy">
+        <button class="primary" @click="createRoom" :disabled="busy || !name.trim()">
           {{ busy ? 'Создаём…' : 'Создать' }}
         </button>
       </div>
@@ -27,7 +32,7 @@
           maxlength="6"
           @keyup.enter="joinRoom"
         />
-        <button class="primary" @click="joinRoom" :disabled="busy || !joinCode">
+        <button class="primary" @click="joinRoom" :disabled="busy || !joinCode || !name.trim()">
           {{ busy ? 'Входим…' : 'Войти' }}
         </button>
       </div>
@@ -51,7 +56,7 @@
           class="seat"
           :class="{ taken: seatsTaken[s - 1], you: seat === s - 1 }"
         >
-          <span class="num">Место {{ s }}</span>
+          <span class="num">{{ seatName(s - 1) || ('Место ' + s) }}</span>
           <span class="state">{{ seatsTaken[s - 1] ? (seat === s - 1 ? 'Вы' : 'Занято') : 'Свободно' }}</span>
         </div>
       </div>
@@ -82,10 +87,12 @@ export default {
   data() {
     return {
       playerCount: 2,
+      name: localStorage.getItem('st_name') || '',
       joinCode: '',
       roomCode: localStorage.getItem('st_code') || '',
       seat: Number(localStorage.getItem('st_seat') || 0),
       seatsTaken: [],
+      names: [],
       gameId: localStorage.getItem('st_game') || '',
       busy: false,
       error: '',
@@ -124,7 +131,7 @@ export default {
       try {
         const r = await api('/rooms', {
           method: 'POST',
-          body: JSON.stringify({ player_count: this.playerCount })
+          body: JSON.stringify({ player_count: this.playerCount, name: this.name.trim() })
         })
         this.enterRoom(r)
       } catch (e) {
@@ -138,7 +145,7 @@ export default {
       this.busy = true
       this.error = ''
       try {
-        const r = await api(`/rooms/${this.joinCode.trim().toUpperCase()}/join`, { method: 'POST' })
+        const r = await api(`/rooms/${this.joinCode.trim().toUpperCase()}/join`, { method: 'POST', body: JSON.stringify({ name: this.name.trim() }) })
         this.enterRoom(r)
       } catch (e) {
         this.error = e.message
@@ -148,6 +155,7 @@ export default {
     },
     enterRoom(r) {
       setToken(r.token)
+      localStorage.setItem('st_name', this.name.trim())
       localStorage.setItem('st_code', r.code)
       localStorage.setItem('st_seat', String(r.seat))
       this.roomCode = r.code
@@ -160,6 +168,7 @@ export default {
         const room = await api(`/rooms/${this.roomCode}`)
         this.seatsTaken = room.seats_taken
         this.playerCount = room.player_count
+        this.names = room.names || []
         if (room.game_id) {
           this.gameId = room.game_id
           localStorage.setItem('st_game', room.game_id)
@@ -187,6 +196,9 @@ export default {
       } finally {
         this.busy = false
       }
+    },
+    seatName(seat) {
+      return (this.names && this.names[seat]) || ''
     },
     copyCode() {
       navigator.clipboard.writeText(this.roomCode).then(() => {

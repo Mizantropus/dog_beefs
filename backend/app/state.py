@@ -36,6 +36,7 @@ class DraftState(BaseModel):
 class PlayerState(BaseModel):
     """Состояние одного игрока."""
     seat: int                                # место за столом 0..N-1
+    name: str = ""                           # имя игрока (из лобби)
     money: int = 1500                        # деньги в личном запасе
     hand: list[str] = []                     # карты действий на руке (id карт)
     explosives: int = 1                      # взрывчатка в личном запасе

@@ -10,7 +10,7 @@
       <span class="dot" :style="{ background: color(p.seat) }"></span>
       <div class="info">
         <strong>
-          Игрок {{ p.seat + 1 }}<span v-if="p.seat === mySeat"> (вы)</span>
+          {{ p.name || ('Игрок ' + (p.seat + 1)) }}<span v-if="p.seat === mySeat"> (вы)</span>
           <span v-if="state.phase !== 'draft' && state.current_seat === p.seat" class="turn-now">● ходит</span>
         </strong>
         <span class="res">
@@ -20,7 +20,7 @@
             <span class="rcount">{{ p.explosives }}</span>
           </span>
           <span v-if="p.kompromat.length" class="rgroup">
-            <img v-for="(t, i) in p.kompromat" :key="'c' + i" :src="smallCompImage(t)" class="ico" :alt="'Компромат на игрока ' + (t + 1)" :title="'Компромат на игрока ' + (t + 1)" />
+            <img v-for="(t, i) in p.kompromat" :key="'c' + i" :src="smallCompImage(t)" class="ico" :alt="'Компромат на ' + pname(t)" :title="'Компромат на ' + pname(t)" />
           </span>
           <span class="rgroup">
             <img :src="smallPoImage()" class="ico" alt="ПО" />
@@ -55,6 +55,10 @@ export default {
     }
   },
   methods: {
+    pname(seat) {
+      const p = (this.state.players || [])[Number(seat)]
+      return (p && p.name) || ('Игрок ' + (Number(seat) + 1))
+    },
     smallBombImage,
     smallCompImage,
     smallPoImage,

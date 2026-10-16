@@ -103,6 +103,10 @@ export default {
     this.initValues()
   },
   methods: {
+    pname(seat) {
+      const p = (this.state.players || [])[Number(seat)]
+      return (p && p.name) || ('Игрок ' + (Number(seat) + 1))
+    },
     initValues() {
       const v = { active: true, resource: 'money', dogs_count: 0, mangy_count: 0 }
       for (const p of this.paramDefs) {
@@ -145,13 +149,13 @@ export default {
         const opts = []
         if ((d.mangy || 0) > 0) opts.push({ value: -1, text: 'Шелудивые' })
         for (const s of seats) {
-          if (s !== this.mySeat && (dogs[s] || 0) > 0) opts.push({ value: s, text: 'Игрок ' + (s + 1) })
+          if (s !== this.mySeat && (dogs[s] || 0) > 0) opts.push({ value: s, text: this.pname(s) })
         }
         return opts
       } else if (p === 'target_seat') {
         seats = seats.filter((s) => s !== this.mySeat)
       }
-      return seats.map((s) => ({ value: s, text: 'Игрок ' + (s + 1) }))
+      return seats.map((s) => ({ value: s, text: this.pname(s) }))
     },
     validDistrict(id) {
       const sk = this.standardKey

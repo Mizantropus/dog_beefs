@@ -4,7 +4,7 @@
     <p class="hint">Банк: {{ pending.pot }}$</p>
     <div class="results">
       <div v-for="s in order" :key="s" class="row" :class="{ cur: s === current }">
-        <span>Игрок {{ s + 1 }}<span v-if="s === mySeat"> (вы)</span></span>
+        <span>{{ pname(s) }}<span v-if="s === mySeat"> (вы)</span></span>
         <span>{{ results[s] != null ? results[s] : '—' }}</span>
       </div>
     </div>
@@ -13,7 +13,7 @@
       <button :disabled="!rolled || rerolled" @click="roll(true)">Перебросить (100$)</button>
       <button class="primary" @click="finish">Завершить</button>
     </div>
-    <p v-else class="hint">Ход игрока {{ current + 1 }}…</p>
+    <p v-else class="hint">Ход {{ pname(current) }}…</p>
   </div>
 </template>
 
@@ -34,6 +34,10 @@ export default {
     myTurn() { return this.current === this.mySeat }
   },
   methods: {
+    pname(seat) {
+      const p = (this.state.players || [])[Number(seat)]
+      return (p && p.name) || ('Игрок ' + (Number(seat) + 1))
+    },
     roll(reroll) { this.$emit('command', { type: 'kazino', action: reroll ? 'reroll' : 'roll', seat: this.mySeat }) },
     finish() { this.$emit('command', { type: 'kazino', action: 'done', seat: this.mySeat }) }
   }

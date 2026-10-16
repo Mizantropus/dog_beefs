@@ -1,4 +1,6 @@
 """REST-эндпоинты партий: создание, загрузка снапшота, команды."""
+import secrets
+
 from fastapi import APIRouter, Header, HTTPException
 from sqlalchemy import select
 
@@ -23,7 +25,8 @@ async def create_game(payload: CreateGameRequest):
         event_cards = (await session.execute(select(EventCard))).scalars().all()
         districts = (await session.execute(select(District))).scalars().all()
         hex_edges = (await session.execute(select(HexEdge).order_by(HexEdge.id))).scalars().all()
-    state = prepare_game(payload.player_count, payload.seed, action_cards, event_cards, districts, hex_edges)
+    seed = payload.seed if payload.seed is not None else secrets.randbelow(2**31)
+    state = prepare_game(payload.player_count, seed, action_cards, event_cards, districts, hex_edges)
     await store.create(state)
     return state
 
