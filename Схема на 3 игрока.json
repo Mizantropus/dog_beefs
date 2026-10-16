@@ -1,0 +1,123 @@
+3 игрока: {
+  "logovo_10": {
+    "top": "",
+    "right_top": "",
+    "right_bottom": "militia_8",
+    "bottom": "sleep_4",
+    "left_bottom": "",
+    "left_top": ""
+  },
+  "sleep_4": {
+    "top": "logovo_10",
+    "right_top": "militia_8",
+    "right_bottom": "uprava_1",
+    "bottom": "zavod_3",
+    "left_bottom": "",
+    "left_top": ""
+  },
+  "militia_8": {
+    "top": "",
+    "right_top": "",
+    "right_bottom": "radio_2",
+    "bottom": "uprava_1",
+    "left_bottom": "sleep_4",
+    "left_top": "logovo_10"
+  },
+  "zavod_3": {
+    "top": "sleep_4",
+    "right_top": "uprava_1",
+    "right_bottom": ["river_1", "bridge_2"],
+    "bottom": ["river_1", "bridge_1"],
+    "left_bottom": "",
+    "left_top": ""
+  },
+  "uprava_1": {
+    "top": "militia_8",
+    "right_top": "radio_2",
+    "right_bottom": ["river_1", "bridge_4"],
+    "bottom": ["river_1", "bridge_3"],
+    "left_bottom": "zavod_3",
+    "left_top": "sleep_4"
+  },
+  "radio_2": {
+    "top": "",
+    "right_top": "",
+    "right_bottom": ["river_1", "bridge_6"],
+    "bottom": ["river_1", "bridge_5"],
+    "left_bottom": "uprava_1",
+    "left_top": "militia_8"
+  },
+  "logovo_6": {
+    "top": ["river_1", "bridge_1"],
+    "right_top": "sleep_9",
+    "right_bottom": "",
+    "bottom": "",
+    "left_bottom": "",
+    "left_top": "river_1"
+  },
+  "sleep_9": {
+    "top": ["river_1", "bridge_3"],
+    "right_top": "sleep_5",
+    "right_bottom": "",
+    "bottom": "",
+    "left_bottom": "logovo_6",
+    "left_top": ["river_1", "bridge_2"]
+  },
+  "sleep_5": {
+    "top": ["river_1", "bridge_5"],
+    "right_top": "logovo_7",
+    "right_bottom": "",
+    "bottom": "",
+    "left_bottom": "sleep_9",
+    "left_top": ["river_1", "bridge_4"]
+  },
+  "logovo_7": {
+    "top": "river_1",
+    "right_top": "",
+    "right_bottom": "",
+    "bottom": "",
+    "left_bottom": "sleep_5",
+    "left_top": ["river_1", "bridge_6"]
+  },
+  "river_1": {
+    "top": ["zavod_3", "uprava_1", "radio_2"],
+    "bottom": ["logovo_6", "sleep_9", "sleep_5", "logovo_7"]
+  },
+  "bridge_1": {
+    "river": "river_1",
+    "top": "zavod_3",
+    "bottom": "logovo_6",
+    "condition": "normal"
+  },
+  "bridge_2": {
+    "river": "river_1",
+    "top": "zavod_3",
+    "bottom": "sleep_9",
+    "condition": "normal"
+  },
+  "bridge_3": {
+    "river": "river_1",
+    "top": "uprava_1",
+    "bottom": "sleep_9",
+    "condition": "normal"
+  },
+  "bridge_4": {
+    "river": "river_1",
+    "top": "uprava_1",
+    "bottom": "sleep_5",
+    "condition": "normal"
+  },
+  "bridge_5": {
+    "river": "river_1",
+    "top": "radio_2",
+    "bottom": "sleep_5",
+    "condition": "normal"
+  },
+  "bridge_6": {
+    "river": "river_1",
+    "top": "radio_2",
+    "bottom": "logovo_7",
+    "condition": "normal"
+  }
+};
+

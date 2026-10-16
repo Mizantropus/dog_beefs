@@ -1,0 +1,226 @@
+[
+  {
+    "id": 1,
+    "player_group": "3",
+    "standard_key": "summon_recruit",
+    "situational_key": "detonate",
+    "draft": true
+  },
+  {
+    "id": 2,
+    "player_group": "4",
+    "standard_key": "start_fight",
+    "situational_key": "no_entry",
+    "draft": true
+  },
+  {
+    "id": 3,
+    "player_group": "4",
+    "standard_key": "summon_recruit",
+    "situational_key": "ambush_first_strike",
+    "draft": true
+  },
+  {
+    "id": 4,
+    "player_group": "4",
+    "standard_key": "lift_place",
+    "situational_key": "detonate",
+    "draft": true
+  },
+  {
+    "id": 5,
+    "player_group": "4",
+    "standard_key": "lift_place",
+    "situational_key": "reroll",
+    "draft": true
+  },
+  {
+    "id": 6,
+    "player_group": "4",
+    "standard_key": "build_destroy",
+    "situational_key": "subsidy_cleanup",
+    "draft": true
+  },
+  {
+    "id": 7,
+    "player_group": "4",
+    "standard_key": "summon_recruit",
+    "situational_key": "subsidy_cleanup",
+    "draft": true
+  },
+  {
+    "id": 8,
+    "player_group": "4",
+    "standard_key": "move",
+    "situational_key": "armor",
+    "draft": true
+  },
+  {
+    "id": 9,
+    "player_group": "4",
+    "standard_key": "summon_recruit",
+    "situational_key": "ambush_first_strike",
+    "draft": true
+  },
+  {
+    "id": 10,
+    "player_group": "4",
+    "standard_key": "move",
+    "situational_key": "no_entry",
+    "draft": true
+  },
+  {
+    "id": 11,
+    "player_group": "2",
+    "standard_key": "move",
+    "situational_key": "ambush_first_strike",
+    "draft": true
+  },
+  {
+    "id": 12,
+    "player_group": "2",
+    "standard_key": "summon_recruit",
+    "situational_key": "reroll",
+    "draft": true
+  },
+  {
+    "id": 13,
+    "player_group": "2",
+    "standard_key": "build_destroy",
+    "situational_key": "ambush_first_strike",
+    "draft": true
+  },
+  {
+    "id": 14,
+    "player_group": "2",
+    "standard_key": "summon_recruit",
+    "situational_key": "no_entry",
+    "draft": true
+  },
+  {
+    "id": 15,
+    "player_group": "2",
+    "standard_key": "build_destroy",
+    "situational_key": "detonate",
+    "draft": true
+  },
+  {
+    "id": 16,
+    "player_group": "2",
+    "standard_key": "build_destroy",
+    "situational_key": "armor",
+    "draft": true
+  },
+  {
+    "id": 17,
+    "player_group": "2",
+    "standard_key": "move",
+    "situational_key": "subsidy_cleanup",
+    "draft": true
+  },
+  {
+    "id": 18,
+    "player_group": "2",
+    "standard_key": "start_fight",
+    "situational_key": "reroll",
+    "draft": true
+  },
+  {
+    "id": 19,
+    "player_group": "2",
+    "standard_key": "summon_recruit",
+    "situational_key": "ambush_first_strike",
+    "draft": true
+  },
+  {
+    "id": 20,
+    "player_group": "2",
+    "standard_key": "start_fight",
+    "situational_key": "detonate",
+    "draft": true
+  },
+  {
+    "id": 21,
+    "player_group": "2",
+    "standard_key": "lift_place",
+    "situational_key": "armor",
+    "draft": true
+  },
+  {
+    "id": 22,
+    "player_group": "2",
+    "standard_key": "lift_place",
+    "situational_key": "subsidy_cleanup",
+    "draft": true
+  },
+  {
+    "id": 23,
+    "player_group": "2",
+    "standard_key": "lift_place",
+    "situational_key": "no_entry",
+    "draft": true
+  },
+  {
+    "id": 24,
+    "player_group": "2",
+    "standard_key": "move",
+    "situational_key": "reroll",
+    "draft": true
+  },
+  {
+    "id": 25,
+    "player_group": "2",
+    "standard_key": "summon_recruit",
+    "situational_key": "armor",
+    "draft": true
+  },
+  {
+    "id": 26,
+    "player_group": "2",
+    "standard_key": "start_fight",
+    "situational_key": "no_entry",
+    "draft": true
+  },
+  {
+    "id": 27,
+    "player_group": "3",
+    "standard_key": "move",
+    "situational_key": "detonate",
+    "draft": true
+  },
+  {
+    "id": 28,
+    "player_group": "3",
+    "standard_key": "build_destroy",
+    "situational_key": "reroll",
+    "draft": true
+  },
+  {
+    "id": 29,
+    "player_group": "3",
+    "standard_key": "build_destroy",
+    "situational_key": "no_entry",
+    "draft": true
+  },
+  {
+    "id": 30,
+    "player_group": "3",
+    "standard_key": "move",
+    "situational_key": "reroll",
+    "draft": true
+  },
+  {
+    "id": 31,
+    "player_group": "3",
+    "standard_key": "lift_place",
+    "situational_key": "ambush_first_strike",
+    "draft": true
+  },
+  {
+    "id": 32,
+    "player_group": "3",
+    "standard_key": "start_fight",
+    "situational_key": "armor",
+    "draft": true
+  }
+]

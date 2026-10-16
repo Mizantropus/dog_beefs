@@ -1,0 +1,114 @@
+{
+  "logovo_6": {
+    "top": "",
+    "right_top": "",
+    "right_bottom": "sleep_5",
+    "bottom": ["river_1", "bridge_2"],
+    "left_bottom": ["river_1", "bridge_1"],
+    "left_top": ""
+  },
+  "sleep_5": {
+    "top": "",
+    "right_top": "",
+    "right_bottom": "",
+    "bottom": ["river_1", "bridge_4"],
+    "left_bottom": ["river_1", "bridge_3"],
+    "left_top": "logovo_6"
+  },
+  "river_1": {
+    "left": ["zavod_3", "uprava_1", "radio_2"],
+    "right": ["logovo_6", "sleep_5"]
+  },
+  "zavod_3": {
+    "top": "river_1",
+    "right_top": ["river_1", "bridge_1"],
+    "right_bottom": "uprava_1",
+    "bottom": ["river_2", "bridge_5"],
+    "left_bottom": "river_2",
+    "left_top": ""
+  },
+  "uprava_1": {
+    "top": ["river_1", "bridge_2"],
+    "right_top": ["river_1", "bridge_3"],
+    "right_bottom": "radio_2",
+    "bottom": ["river_2", "bridge_7"],
+    "left_bottom": ["river_2", "bridge_6"],
+    "left_top": "zavod_3"
+  },
+  "radio_2": {
+    "top": ["river_1", "bridge_4"],
+    "right_top": "river_1",
+    "right_bottom": "",
+    "bottom": "river_2",
+    "left_bottom": ["river_2", "bridge_8"],
+    "left_top": "uprava_1"
+  },
+  "river_2": {
+    "left": ["logovo_7", "sleep_4"],
+    "right": ["zavod_3", "uprava_1", "radio_2"]
+  },
+  "logovo_7": {
+    "top": ["river_2", "bridge_7"],
+    "right_top": ["river_2", "bridge_8"],
+    "right_bottom": "",
+    "bottom": "",
+    "left_bottom": "",
+    "left_top": "sleep_4"
+  },
+  "sleep_4": {
+    "top": ["river_2", "bridge_5"],
+    "right_top": ["river_2", "bridge_6"],
+    "right_bottom": "logovo_7",
+    "bottom": "",
+    "left_bottom": "",
+    "left_top": ""
+  },
+  "bridge_1": {
+    "river": "river_1",
+    "left": "zavod_3",
+    "right": "logovo_6",
+    "condition": "normal"
+  },
+  "bridge_2": {
+    "river": "river_1",
+    "left": "uprava_1",
+    "right": "logovo_6",
+    "condition": "normal"
+  },
+  "bridge_3": {
+    "river": "river_1",
+    "left": "uprava_1",
+    "right": "sleep_5",
+    "condition": "normal"
+  },
+  "bridge_4": {
+    "river": "river_1",
+    "left": "radio_2",
+    "right": "sleep_5",
+    "condition": "normal"
+  },
+  "bridge_5": {
+    "river": "river_2",
+    "left": "sleep_4",
+    "right": "zavod_3",
+    "condition": "normal"
+  },
+  "bridge_6": {
+    "river": "river_2",
+    "left": "sleep_4",
+    "right": "uprava_1",
+    "condition": "normal"
+  },
+  "bridge_7": {
+    "river": "river_2",
+    "left": "logovo_7",
+    "right": "uprava_1",
+    "condition": "normal"
+  },
+  "bridge_8": {
+    "river": "river_2",
+    "left": "logovo_7",
+    "right": "radio_2",
+    "condition": "normal"
+  }
+}

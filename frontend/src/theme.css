@@ -1,0 +1,218 @@
+/* ============================================================
+   Дизайн-система «Собачьи тёрки»
+   CSS-переменные + базовые стили + утилитные классы.
+   Подключается глобально (см. main.js).
+   ============================================================ */
+
+:root {
+  /* --- Палитра игроков (совпадает с PLAYER_COLORS в board.js) --- */
+  --p1: #D35249;   /* seat 0 (красный) */
+  --p2: #698DC9;   /* seat 1 (синий) */
+  --p3: #81BC77;   /* seat 2 (зелёный) */
+  --p4: #EFB94D;   /* seat 3 (жёлтый) */
+
+  /* --- Поверхности и текст --- */
+  --bg: #f4f2ec;
+  --surface: #ffffff;
+  --surface-2: #faf9f5;
+  --surface-3: #f0eee7;
+  --border: #e3dfd4;
+  --border-strong: #d0cab9;
+  --text: #292825;
+  --text-muted: #8b8577;
+  --text-invert: #ffffff;
+
+  /* --- Акценты --- */
+  --primary: #3b3f46;       /* нейтральный графит для главных кнопок */
+  --primary-hover: #23262b;
+  --accent: #0f766e;        /* бирюзовый (не совпадает с цветами игроков) */
+  --ok: #16a34a;
+  --warn: #d97706;
+  --danger: #dc2626;
+  --info: #2563eb;
+  --reward: #d97706;        /* наградные жетоны */
+
+  /* --- Радиусы --- */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 16px;
+  --r-pill: 999px;
+
+  /* --- Тени --- */
+  --shadow-sm: 0 1px 2px rgba(41, 40, 37, 0.08);
+  --shadow-md: 0 4px 14px rgba(41, 40, 37, 0.12);
+  --shadow-lg: 0 12px 32px rgba(41, 40, 37, 0.20);
+
+  /* --- Типографика --- */
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --fs-xs: 0.72rem;
+  --fs-sm: 0.85rem;
+  --fs-md: 0.95rem;
+  --fs-lg: 1.1rem;
+  --fs-xl: 1.35rem;
+  --fw-400: 400;
+  --fw-600: 600;
+  --fw-700: 700;
+
+  /* --- Отступы --- */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+}
+
+/* ============ Базовые стили ============ */
+* { box-sizing: border-box; }
+
+html, body, #app { min-height: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  color: var(--text);
+  font-size: var(--fs-md);
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  background:
+    radial-gradient(1200px 700px at 15% -10%, rgba(15, 118, 110, 0.07), transparent 60%),
+    radial-gradient(1000px 600px at 100% 0%, rgba(217, 164, 65, 0.08), transparent 55%),
+    var(--bg);
+  background-attachment: fixed;
+}
+
+h1, h2, h3, h4 { font-weight: var(--fw-700); line-height: 1.2; margin: 0 0 var(--sp-2); }
+
+button, input, select, textarea { font-family: inherit; font-size: inherit; color: inherit; }
+
+button { cursor: pointer; }
+button:disabled { cursor: default; }
+
+input[type="number"], input[type="text"], select {
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-sm);
+  padding: var(--sp-2) var(--sp-3);
+  min-height: 2.2rem;
+}
+input[type="number"]:focus, select:focus, input[type="text"]:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
+}
+
+/* ============ Утилиты ============ */
+
+/* Панель */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--sp-4);
+}
+
+/* Кнопка */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-md);
+  padding: var(--sp-2) var(--sp-4);
+  background: var(--surface);
+  color: var(--text);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-600);
+  white-space: nowrap;
+  transition: transform 0.06s ease, box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+}
+.btn:hover:not(:disabled) { border-color: var(--primary); box-shadow: var(--shadow-sm); }
+.btn:active:not(:disabled) { transform: translateY(1px); }
+.btn:disabled { opacity: 0.45; }
+.btn.primary { background: var(--primary); border-color: var(--primary); color: var(--text-invert); }
+.btn.primary:hover:not(:disabled) { background: var(--primary-hover); border-color: var(--primary-hover); }
+.btn.accent { background: var(--accent); border-color: var(--accent); color: var(--text-invert); }
+.btn.ghost { background: transparent; border-color: transparent; }
+.btn.danger { background: var(--danger); border-color: var(--danger); color: #fff; }
+
+/* Бейдж */
+.badge {
+  display: inline-block;
+  border-radius: var(--r-pill);
+  padding: 0.05rem 0.5rem;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-700);
+  line-height: 1.5;
+  background: var(--surface-3);
+  color: var(--text-muted);
+  vertical-align: middle;
+}
+.badge.reward { background: var(--reward); color: #fff; }
+.badge.ok { background: var(--ok); color: #fff; }
+.badge.danger { background: var(--danger); color: #fff; }
+.badge.info { background: var(--info); color: #fff; }
+.badge.muted { background: var(--surface-3); color: var(--text-muted); }
+
+/* Модальный фон + окно */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(41, 40, 37, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 40;
+  animation: fade-in 0.15s ease;
+}
+.modal {
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--sp-5);
+  max-width: 92vw;
+  max-height: 90vh;
+  overflow: auto;
+  animation: pop-in 0.18s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+/* Вспомогательный текст */
+.hint { color: var(--text-muted); font-size: var(--fs-sm); }
+.muted { color: var(--text-muted); }
+
+/* ============ Анимации ============ */
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pop-in { from { opacity: 0; transform: scale(0.94); } to { opacity: 1; transform: scale(1); } }
+@keyframes spin {
+  0%   { transform: rotate(0deg) scale(0.4); opacity: 0; }
+  60%  { transform: rotate(720deg) scale(1.15); opacity: 1; }
+  100% { transform: rotate(720deg) scale(1); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  15% { transform: translateX(-5px); }
+  30% { transform: translateX(5px); }
+  45% { transform: translateX(-4px); }
+  60% { transform: translateX(4px); }
+  75% { transform: translateX(-2px); }
+  90% { transform: translateX(2px); }
+}
+@keyframes pop {
+  from { opacity: 0; transform: scale(0.5); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.pulse { animation: pulse 1.6s ease-in-out infinite; }
+.shake { animation: shake 0.45s ease; }
+.pop { animation: pop 0.28s cubic-bezier(0.2, 0.8, 0.3, 1); }
+.slide-up { animation: slide-up 0.28s ease; }

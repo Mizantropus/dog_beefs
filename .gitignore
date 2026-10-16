@@ -1,0 +1,22 @@
+# Node — игнорируем везде, включая frontend/
+node_modules/
+
+# Картинки только в корне — не трогаем frontend/public/pictures
+/pictures/
+
+# Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Env
+.env
+.env.local
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+*.log
+docker-compose.yml

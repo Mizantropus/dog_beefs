@@ -1,0 +1,35 @@
+Точное сопоставление (id -> текущий action-N.png):
+id  1  <- НЕТ КАРТИНКИ (нет точного совпадения: lift_place/ambush_first_strike/2)
+id  2  <- НЕТ КАРТИНКИ (нет точного совпадения: summon_recruit/subsidy_cleanup/2)
+id  3  <- action-24
+id  4  <- НЕТ КАРТИНКИ (нет точного совпадения: start_fight/armor/2)
+id  5  <- НЕТ КАРТИНКИ (нет точного совпадения: build_destroy/no_entry/2)
+id  6  <- НЕТ КАРТИНКИ (нет точного совпадения: lift_place/detonate/2)
+id  7  <- action-19
+id  8  <- action-17
+id  9  <- action-18
+id 10  <- action-16
+id 11  <- action-23
+id 12  <- НЕТ КАРТИНКИ (нет точного совпадения: summon_recruit/detonate/2)
+id 13  <- action-11
+id 14  <- НЕТ КАРТИНКИ (нет точного совпадения: start_fight/subsidy_cleanup/2)
+id 15  <- НЕТ КАРТИНКИ (нет точного совпадения: build_destroy/reroll/2)
+id 16  <- action-21
+id 17  <- НЕТ КАРТИНКИ (нет точного совпадения: summon_recruit/no_entry/3)
+id 18  <- action-27
+id 19  <- НЕТ КАРТИНКИ (нет точного совпадения: start_fight/ambush_first_strike/3)
+id 20  <- НЕТ КАРТИНКИ (нет точного совпадения: build_destroy/subsidy_cleanup/3)
+id 21  <- НЕТ КАРТИНКИ (нет точного совпадения: lift_place/reroll/3)
+id 22  <- НЕТ КАРТИНКИ (нет точного совпадения: summon_recruit/armor/3)
+id 23  <- НЕТ КАРТИНКИ (нет точного совпадения: move/no_entry/3)
+id 24  <- НЕТ КАРТИНКИ (нет точного совпадения: start_fight/detonate/3)
+id 25  <- НЕТ КАРТИНКИ (нет точного совпадения: build_destroy/ambush_first_strike/4)
+id 26  <- НЕТ КАРТИНКИ (нет точного совпадения: lift_place/subsidy_cleanup/4)
+id 27  <- НЕТ КАРТИНКИ (нет точного совпадения: summon_recruit/reroll/4)
+id 28  <- action-8
+id 29  <- action-2
+id 30  <- НЕТ КАРТИНКИ (нет точного совпадения: build_destroy/detonate/4)
+id 31  <- НЕТ КАРТИНКИ (нет точного совпадения: lift_place/ambush_first_strike/4)
+id 32  <- action-7
+
+Нет картинок у id: 1, 2, 4, 5, 6, 12, 14, 15, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 30, 31

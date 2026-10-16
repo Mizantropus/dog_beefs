@@ -1,0 +1,434 @@
+[
+  {
+    "id": 1,
+    "player_count": 2,
+    "a": 5,
+    "b": 6,
+    "kind": "land",
+    "draft": false
+  },
+  {
+    "id": 2,
+    "player_count": 2,
+    "a": 1,
+    "b": 3,
+    "kind": "land",
+    "draft": false
+  },
+  {
+    "id": 3,
+    "player_count": 2,
+    "a": 1,
+    "b": 2,
+    "kind": "land",
+    "draft": false
+  },
+  {
+    "id": 4,
+    "player_count": 2,
+    "a": 4,
+    "b": 7,
+    "kind": "land",
+    "draft": false
+  },
+  {
+    "id": 5,
+    "player_count": 2,
+    "a": 3,
+    "b": 6,
+    "kind": "river",
+    "draft": false
+  },
+  {
+    "id": 6,
+    "player_count": 2,
+    "a": 1,
+    "b": 6,
+    "kind": "river",
+    "draft": false
+  },
+  {
+    "id": 7,
+    "player_count": 2,
+    "a": 1,
+    "b": 5,
+    "kind": "river",
+    "draft": false
+  },
+  {
+    "id": 8,
+    "player_count": 2,
+    "a": 2,
+    "b": 5,
+    "kind": "river",
+    "draft": false
+  },
+  {
+    "id": 9,
+    "player_count": 2,
+    "a": 3,
+    "b": 4,
+    "kind": "river",
+    "draft": false
+  },
+  {
+    "id": 10,
+    "player_count": 2,
+    "a": 1,
+    "b": 4,
+    "kind": "river",
+    "draft": false
+  },
+  {
+    "id": 11,
+    "player_count": 2,
+    "a": 1,
+    "b": 7,
+    "kind": "river",
+    "draft": false
+  },
+  {
+    "id": 12,
+    "player_count": 2,
+    "a": 2,
+    "b": 7,
+    "kind": "river",
+    "draft": false
+  },
+  {
+    "id": 13,
+    "player_count": 3,
+    "a": 8,
+    "b": 10,
+    "kind": "land",
+    "draft": false
+  },
+  {
+    "id": 14,
+    "player_count": 3,
+    "a": 4,
+    "b": 10,
+    "kind": "land",
+    "draft": false
+  },
+  {
+    "id": 15,
+    "player_count": 3,
+    "a": 4,
+    "b": 8,
+    "kind": "land",
+    "draft": false
+  },
+  {
+    "id": 16,
+    "player_count": 3,
+    "a": 1,
+    "b": 4,
+    "kind": "land",
+    "draft": false
+  },
+  {
+    "id": 17,
+    "player_count": 3,
+    "a": 3,
+    "b": 4,
+    "kind": "land",
+    "draft": false
+  },
+  {
+    "id": 18,
+    "player_count": 3,
+    "a": 2,
+    "b": 8,
+    "kind": "land",
+    "draft": false
+  },
+  {
+    "id": 19,
+    "player_count": 3,
+    "a": 1,
+    "b": 8,
+    "kind": "land",
+    "draft": false
+  },
+  {
+    "id": 20,
+    "player_count": 3,
+    "a": 1,
+    "b": 3,
+    "kind": "land",
+    "draft": false
+  },
+  {
+    "id": 21,
+    "player_count": 3,
+    "a": 1,
+    "b": 2,
+    "kind": "land",
+    "draft": false
+  },
+  {
+    "id": 22,
+    "player_count": 3,
+    "a": 6,
+    "b": 9,
+    "kind": "land",
+    "draft": false
+  },
+  {
+    "id": 23,
+    "player_count": 3,
+    "a": 5,
+    "b": 9,
+    "kind": "land",
+    "draft": false
+  },
+  {
+    "id": 24,
+    "player_count": 3,
+    "a": 5,
+    "b": 7,
+    "kind": "land",
+    "draft": false
+  },
+  {
+    "id": 25,
+    "player_count": 3,
+    "a": 3,
+    "b": 6,
+    "kind": "river",
+    "draft": false
+  },
+  {
+    "id": 26,
+    "player_count": 3,
+    "a": 3,
+    "b": 9,
+    "kind": "river",
+    "draft": false
+  },
+  {
+    "id": 27,
+    "player_count": 3,
+    "a": 1,
+    "b": 9,
+    "kind": "river",
+    "draft": false
+  },
+  {
+    "id": 28,
+    "player_count": 3,
+    "a": 1,
+    "b": 5,
+    "kind": "river",
+    "draft": false
+  },
+  {
+    "id": 29,
+    "player_count": 3,
+    "a": 2,
+    "b": 5,
+    "kind": "river",
+    "draft": false
+  },
+  {
+    "id": 30,
+    "player_count": 3,
+    "a": 2,
+    "b": 7,
+    "kind": "river",
+    "draft": false
+  },
+  {
+    "id": 31,
+    "player_count": 4,
+    "a": 4,
+    "b": 10,
+    "kind": "land",
+    "draft": false
+  },
+  {
+    "id": 32,
+    "player_count": 4,
+    "a": 4,
+    "b": 8,
+    "kind": "land",
+    "draft": false
+  },
+  {
+    "id": 33,
+    "player_count": 4,
+    "a": 4,
+    "b": 5,
+    "kind": "land",
+    "draft": false
+  },
+  {
+    "id": 34,
+    "player_count": 4,
+    "a": 5,
+    "b": 8,
+    "kind": "land",
+    "draft": false
+  },
+  {
+    "id": 35,
+    "player_count": 4,
+    "a": 5,
+    "b": 6,
+    "kind": "land",
+    "draft": false
+  },
+  {
+    "id": 36,
+    "player_count": 4,
+    "a": 1,
+    "b": 3,
+    "kind": "land",
+    "draft": false
+  },
+  {
+    "id": 37,
+    "player_count": 4,
+    "a": 1,
+    "b": 2,
+    "kind": "land",
+    "draft": false
+  },
+  {
+    "id": 38,
+    "player_count": 4,
+    "a": 9,
+    "b": 13,
+    "kind": "land",
+    "draft": false
+  },
+  {
+    "id": 39,
+    "player_count": 4,
+    "a": 9,
+    "b": 11,
+    "kind": "land",
+    "draft": false
+  },
+  {
+    "id": 40,
+    "player_count": 4,
+    "a": 9,
+    "b": 12,
+    "kind": "land",
+    "draft": false
+  },
+  {
+    "id": 41,
+    "player_count": 4,
+    "a": 11,
+    "b": 12,
+    "kind": "land",
+    "draft": false
+  },
+  {
+    "id": 42,
+    "player_count": 4,
+    "a": 7,
+    "b": 12,
+    "kind": "land",
+    "draft": false
+  },
+  {
+    "id": 43,
+    "player_count": 4,
+    "a": 3,
+    "b": 10,
+    "kind": "river",
+    "draft": false
+  },
+  {
+    "id": 44,
+    "player_count": 4,
+    "a": 3,
+    "b": 4,
+    "kind": "river",
+    "draft": false
+  },
+  {
+    "id": 45,
+    "player_count": 4,
+    "a": 1,
+    "b": 4,
+    "kind": "river",
+    "draft": false
+  },
+  {
+    "id": 46,
+    "player_count": 4,
+    "a": 1,
+    "b": 5,
+    "kind": "river",
+    "draft": false
+  },
+  {
+    "id": 47,
+    "player_count": 4,
+    "a": 2,
+    "b": 5,
+    "kind": "river",
+    "draft": false
+  },
+  {
+    "id": 48,
+    "player_count": 4,
+    "a": 2,
+    "b": 6,
+    "kind": "river",
+    "draft": false
+  },
+  {
+    "id": 49,
+    "player_count": 4,
+    "a": 3,
+    "b": 13,
+    "kind": "river",
+    "draft": false
+  },
+  {
+    "id": 50,
+    "player_count": 4,
+    "a": 3,
+    "b": 9,
+    "kind": "river",
+    "draft": false
+  },
+  {
+    "id": 51,
+    "player_count": 4,
+    "a": 1,
+    "b": 9,
+    "kind": "river",
+    "draft": false
+  },
+  {
+    "id": 52,
+    "player_count": 4,
+    "a": 1,
+    "b": 12,
+    "kind": "river",
+    "draft": false
+  },
+  {
+    "id": 53,
+    "player_count": 4,
+    "a": 2,
+    "b": 12,
+    "kind": "river",
+    "draft": false
+  },
+  {
+    "id": 54,
+    "player_count": 4,
+    "a": 2,
+    "b": 7,
+    "kind": "river",
+    "draft": false
+  }
+]

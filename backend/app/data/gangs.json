@@ -1,0 +1,18 @@
+[
+  {"id": 1, "slug": "kontrolyory", "name": "Контролёры", "ability_text": null, "draft": true},
+  {"id": 2, "slug": "zhduny", "name": "Ждуны", "ability_text": null, "draft": true},
+  {"id": 3, "slug": "plyushkiny", "name": "Плюшкины", "ability_text": null, "draft": true},
+  {"id": 4, "slug": "renegaty", "name": "Ренегаты", "ability_text": null, "draft": true},
+  {"id": 5, "slug": "vonyuchki", "name": "Вонючки", "ability_text": null, "draft": true},
+  {"id": 6, "slug": "podpolshchiki", "name": "Подпольщики", "ability_text": null, "draft": true},
+  {"id": 7, "slug": "vezunchiki", "name": "Везунчики", "ability_text": null, "draft": true},
+  {"id": 8, "slug": "pronyry", "name": "Проныры", "ability_text": null, "draft": true},
+  {"id": 9, "slug": "inzhenery", "name": "Инженеры", "ability_text": null, "draft": true},
+  {"id": 10, "slug": "vory", "name": "Воры", "ability_text": null, "draft": true},
+  {"id": 11, "slug": "ponaehavshie", "name": "Понаехавшие", "ability_text": null, "draft": true},
+  {"id": 12, "slug": "mazhory", "name": "Мажоры", "ability_text": null, "draft": true},
+  {"id": 13, "slug": "kolyuchki", "name": "Колючки", "ability_text": null, "draft": true},
+  {"id": 14, "slug": "edinichka", "name": "Единичка", "ability_text": null, "draft": true},
+  {"id": 15, "slug": "avtoritety", "name": "Авторитеты", "ability_text": null, "draft": true},
+  {"id": 16, "slug": "roddomovskie", "name": "Роддомовские", "ability_text": null, "draft": true}
+]
