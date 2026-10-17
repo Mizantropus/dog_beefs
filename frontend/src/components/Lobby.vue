@@ -7,7 +7,7 @@
 
       <div class="card">
         <h2>Ваше имя</h2>
-        <input v-model="name" class="code-input name-input" placeholder="ИМЯ" maxlength="24" />
+        <input v-model="name" class="code-input name-input" placeholder="Ваше имя:" maxlength="24" />
       </div>
 
       <div class="card">
@@ -28,7 +28,7 @@
         <input
           v-model="joinCode"
           class="code-input"
-          placeholder="КОД КОМНАТЫ"
+          placeholder="Код комнаты"
           maxlength="6"
           @keyup.enter="joinRoom"
         />
@@ -201,10 +201,33 @@ export default {
       return (this.names && this.names[seat]) || ''
     },
     copyCode() {
-      navigator.clipboard.writeText(this.roomCode).then(() => {
+      const done = () => {
         this.copied = true
         setTimeout(() => (this.copied = false), 1500)
-      })
+      }
+      const text = this.roomCode
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(done).catch(() => this.fallbackCopy(text, done))
+      } else {
+        this.fallbackCopy(text, done)
+      }
+    },
+    fallbackCopy(text, done) {
+      const ta = document.createElement('textarea')
+      ta.value = text
+      ta.setAttribute('readonly', '')
+      ta.style.position = 'fixed'
+      ta.style.left = '-9999px'
+      document.body.appendChild(ta)
+      ta.select()
+      try {
+        document.execCommand('copy')
+        done()
+      } catch (e) {
+        this.error = 'Скопируйте код вручную: ' + this.roomCode
+      } finally {
+        document.body.removeChild(ta)
+      }
     },
     leave() {
       this.stopPolling()
@@ -255,8 +278,8 @@ export default {
   box-sizing: border-box;
   padding: 0.6rem;
   font-size: 1.2rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  letter-spacing: normal;
+  text-transform: none;
   border: 1px solid #ddd;
   border-radius: 0.5rem;
   margin-bottom: 0.75rem;
