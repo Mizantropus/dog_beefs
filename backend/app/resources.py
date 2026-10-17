@@ -129,6 +129,19 @@ def demine(state: GameState, rng: Rng, seat: int, district_id: int) -> None:
     raise CommandError("Нет чужой активной взрывчатки")
 
 
+def detonate_own(state: GameState, rng: Rng, seat: int, district_id: int) -> None:
+    """Подорвать свою активную взрывчатку в выбранном районе."""
+    d = state.districts.get(district_id)
+    if d is None:
+        raise CommandError("Такого района нет")
+    for ex in d.explosives:
+        if ex.get("owner") == seat and ex.get("active"):
+            d.explosives.remove(ex)
+            explode(state, rng, district_id, seat)
+            return
+    raise CommandError("Нет вашей активной взрывчатки в этом районе")
+
+
 def explode_event(state: GameState, district_id: int) -> None:
     """Взрыв от карты события: за каждого пса — проверка авторитета (1–3 = гибель)."""
     d = state.districts[district_id]

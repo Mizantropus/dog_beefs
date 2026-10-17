@@ -81,6 +81,9 @@ export default {
     },
     canPlay() {
       if (this.standardKey === 'start_fight') {
+        if (this.option === 'detonate_own') {
+          return this.values.district_id != null
+        }
         return this.values.defender !== '' && this.values.defender != null
       }
       return true
@@ -172,6 +175,10 @@ export default {
       }
       if (sk === 'move') return hasDog
       if (sk === 'start_fight') {
+        if (opt === 'detonate_own') {
+          const exs = d.explosives || []
+          return exs.some((e) => e.owner === this.mySeat && e.active)
+        }
         const enemyDogs = Object.keys(dogs).some((s) => Number(s) !== this.mySeat && dogs[s] > 0)
         return hasDog && (enemyDogs || (d.mangy || 0) > 0)
       }

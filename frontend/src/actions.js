@@ -27,7 +27,10 @@ const OPTION_PARAMS = {
 // Какие параметры нужны для действия (standard_key + option).
 export function paramsFor(standardKey, option) {
   if (standardKey === 'move') return ['district_id', 'to_district', 'dogs_count', 'mangy_count']
-  if (standardKey === 'start_fight') return ['district_id', 'defender']
+  if (standardKey === 'start_fight') {
+    if (option === 'detonate_own') return ['district_id']
+    return ['district_id', 'defender']
+  }
   return OPTION_PARAMS[option] || []
 }
 

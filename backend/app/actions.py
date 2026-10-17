@@ -78,10 +78,13 @@ def resolve_standard(state: GameState, rng: Rng, seat: int, standard_key: str,
     elif standard_key == "move":
         board.move(state, seat, district_id, to_district, dogs_count or 0, mangy_count or 0)
     elif standard_key == "start_fight":
-        validate_start(state, seat, district_id, defender)
-        if reactions.open_combat_started(state, seat, defender, district_id):
-            return  # окно first_strike
-        start_combat(state, seat, district_id, defender)
+        if option == "detonate_own":
+            resources.detonate_own(state, rng, seat, district_id)
+        else:
+            validate_start(state, seat, district_id, defender)
+            if reactions.open_combat_started(state, seat, defender, district_id):
+                return  # окно first_strike
+            start_combat(state, seat, district_id, defender)
     elif standard_key == "build_destroy":
         if option == "build":
             build(state, seat, district_id)
