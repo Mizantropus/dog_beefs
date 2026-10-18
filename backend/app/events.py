@@ -1,5 +1,5 @@
 """События: вытягивание карты и её разрешение."""
-from . import influence, reactions, resources, tokens
+from . import board, influence, reactions, resources, tokens
 from .buildings import controller
 from .errors import CommandError
 from .rng import Rng
@@ -220,19 +220,28 @@ def _subbotnik_pick(state: GameState, seat: int, district_id: int | None, resour
 
 def _black_friday_buy(state: GameState, seat: int, choice: str | None,
                       target_seat: int | None, district_id: int | None) -> None:
-    """Чёрная пятница: купить единицу со скидкой 200$ (по зданиям игрока)."""
+    """Чёрная пятница: купить одну единицу со скидкой 200$ (по зданиям игрока), один раз."""
     p = state.players[seat]
+    pend = state.pending_may_event
+    if seat in pend.get("acted", []):
+        raise CommandError("Вы уже совершили покупку")
     kinds = set()
     for d in state.districts.values():
         if d.building_owner == seat and d.ability:
             kinds.add(d.ability.get("kind"))
     cost = 0
     if choice == "mangy" and "spawn_mangy" in kinds:
-        target = district_id if district_id is not None else _building_id(state, seat, "spawn_mangy")
+        bid = _building_id(state, seat, "spawn_mangy")
+        target = district_id if district_id is not None else bid
+        if target != bid and target not in board.neighbors(state, bid):
+            raise CommandError("Шелудивого можно добавить в район здания или в соседний")
         state.districts[target].mangy += 1
     elif choice == "dog" and "spawn_dog" in kinds:
-        d = state.districts[_building_id(state, seat, "spawn_dog")]
-        d.dogs[seat] = d.dogs.get(seat, 0) + 1
+        bid = _building_id(state, seat, "spawn_dog")
+        target = district_id if district_id is not None else bid
+        if target != bid and target not in board.neighbors(state, bid):
+            raise CommandError("Пса можно добавить в район здания или в соседний")
+        state.districts[target].dogs[seat] = state.districts[target].dogs.get(seat, 0) + 1
         cost = 100
     elif choice == "explosive" and "buy_explosive_or_discard" in kinds:
         p.explosives += 1
@@ -247,6 +256,7 @@ def _black_friday_buy(state: GameState, seat: int, choice: str | None,
     if p.money < cost:
         raise CommandError("Недостаточно денег")
     p.money -= cost
+    pend.setdefault("acted", []).append(seat)
 
 
 def _building_id(state: GameState, seat: int, kind: str) -> int:

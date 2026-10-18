@@ -64,7 +64,7 @@
   },
   {
     "id": 10,
-    "player_group": "4",
+    "player_group": "2",
     "standard_key": "move",
     "situational_key": "no_entry",
     "draft": true
@@ -176,7 +176,7 @@
   },
   {
     "id": 26,
-    "player_group": "2",
+    "player_group": "3",
     "standard_key": "start_fight",
     "situational_key": "no_entry",
     "draft": true

@@ -49,7 +49,10 @@
       <select v-if="choice === 'mangy'" v-model="districtId">
         <option v-for="d in mangyDistricts" :key="d.value" :value="d.value">{{ d.text }}</option>
       </select>
-      <button class="primary" @click="act({ choice: choice, target_seat: targetSeat, district_id: districtId })">Купить</button>
+      <select v-if="choice === 'dog'" v-model="districtId">
+        <option v-for="d in dogDistricts" :key="d.value" :value="d.value">{{ d.text }}</option>
+      </select>
+      <button class="primary" :disabled="acted" @click="act({ choice: choice, target_seat: targetSeat, district_id: districtId })">Купить</button>
     </div>
 
     <div v-else-if="slug === 'stroitelny_bum'" class="form">
@@ -120,8 +123,10 @@ export default {
         return (d.dogs || {})[this.mySeat] > 0
       }).map((id) => ({ value: id, text: this.name(id) }))
     },
-    mangyDistricts() {
-      const b = this.buildingDistrict('spawn_mangy')
+    mangyDistricts() { return this.buildingNeighborDistricts('spawn_mangy') },
+    dogDistricts() { return this.buildingNeighborDistricts('spawn_dog') },
+    buildingNeighborDistricts(kind) {
+      const b = this.buildingDistrict(kind)
       if (b == null) return []
       const out = [b]
       for (const e of (this.state.edges || [])) {

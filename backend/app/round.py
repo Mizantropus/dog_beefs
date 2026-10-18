@@ -10,6 +10,17 @@ from .rng import Rng
 from .state import DraftState, GameState, Phase, new_game
 
 
+def _deal(state: GameState, count: int) -> list[str]:
+    """Выдать до count карт из добора действий (сколько есть — без IndexError)."""
+    out = []
+    draw = state.action_deck.draw
+    for _ in range(count):
+        if not draw:
+            break
+        out.append(draw.pop())
+    return out
+
+
 def groups_for_player_count(n: int) -> set[str]:
     """Какие маркеры карт участвуют при N игроках (по правилам подготовки)."""
     if n == 2:
@@ -80,7 +91,7 @@ def start_round(state: GameState, rng: Rng) -> None:
         p.played_standard = False
     hand = {}
     for seat in range(state.player_count):
-        hand[seat] = [state.action_deck.draw.pop() for _ in range(4)]
+        hand[seat] = _deal(state, 4)
     state.draft = DraftState(deal=1, hand=hand, picked=[])
 
 
@@ -103,7 +114,7 @@ def advance_draft(state: GameState, rng: Rng) -> None:
         if d.deal == 1:
             d.deal = 2
             for seat in range(n):
-                d.hand[seat] = [state.action_deck.draw.pop() for _ in range(4)]
+                d.hand[seat] = _deal(state, 4)
         else:
             state.draft = None
             state.phase = Phase.PLAY
