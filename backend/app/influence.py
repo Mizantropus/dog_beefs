@@ -54,8 +54,8 @@ def influence_for_combat(state: GameState) -> None:
     d = state.districts[lc["district_id"]]
     if winner in d.kompromat:
         return  # компромат на вас — нет влияния
-    if lc["vs_mangy"] and lc["mangy_killed_or_recruited"] < 2:
-        return  # нужно убить/завербовать хотя бы двоих шелудивых
+    if lc["vs_mangy"] and lc.get("initial_mangy", 0) < 3:
+        return  # нужно победить минимум троих шелудивых
     gain_influence(state, winner, 1)
     d.kompromat.append(winner)  # положить компромат на себя
 

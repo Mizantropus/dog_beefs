@@ -198,7 +198,8 @@ def close(state: GameState, rng: Rng) -> None:
         state.combat = CombatState(district_id=pending["district_id"],
                                    attacker=pending["attacker"],
                                    defender=pending["defender"],
-                                   next_is_attacker=not pending.get("first_strike", False))
+                                   next_is_attacker=not pending.get("first_strike", False),
+                                   initial_mangy=state.districts[pending["district_id"]].mangy)
     elif t == "moved_into":
         _close_moved_into(state, rng, pending)
     elif t == "dog_killed":

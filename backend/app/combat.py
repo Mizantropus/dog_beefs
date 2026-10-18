@@ -49,11 +49,13 @@ def validate_start(state: GameState, attacker: int, district_id: int, defender: 
 
 def start_combat(state: GameState, attacker: int, district_id: int, defender: int | None) -> None:
     """Начать бой (вызывается после validate_start)."""
+    d = state.districts[district_id]
     state.combat = CombatState(
         district_id=district_id,
         attacker=attacker,
         defender=defender,
         next_is_attacker=True,
+        initial_mangy=d.mangy,
     )
 
 
@@ -320,6 +322,7 @@ def _finish(state: GameState, rng: Rng, winner: int | None) -> None:
         "district_id": c.district_id,
         "vs_mangy": c.defender is None,
         "mangy_killed_or_recruited": c.mangy_killed_or_recruited,
+        "initial_mangy": c.initial_mangy,
     }
     state.combat = None
     vp_before = state.players[winner].victory_points if winner is not None else 0

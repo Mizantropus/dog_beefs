@@ -70,7 +70,8 @@ class CombatState(BaseModel):
     defender: int | None = None              # None => бой с шелудивыми
     next_is_attacker: bool = True            # чей ход: True=атакующий, False=защитник/шелудивые
     pending: dict | None = None              # {"face": int, "opposite": int} — бросок в ожидании переворота
-    mangy_killed_or_recruited: int = 0       # убито/завербовано шелудивых (для условия влияния)
+    mangy_killed_or_recruited: int = 0       # убито/завербовано шелудивых
+    initial_mangy: int = 0                   # шелудивых в районе на старте боя (для условия влияния)
 
 
 class GameState(BaseModel):
