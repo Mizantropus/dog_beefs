@@ -1,6 +1,8 @@
 <template>
+  <div>
   <div v-if="pending" class="kazino panel">
     <h3>Казино</h3>
+    <button class="show-event" @click="showCard = true">Показать событие</button>
     <p class="hint">Банк: {{ pending.pot }}$</p>
     <div class="results">
       <div v-for="s in order" :key="s" class="row" :class="{ cur: s === current }">
@@ -15,17 +17,27 @@
     </div>
     <p v-else class="hint">Ход {{ pname(current) }}…</p>
   </div>
+  <EventCardPopup v-if="pending && showCard" :slug="slug" :events="events" @close="showCard = false" />
+</div>
 </template>
 
 <script>
+import EventCardPopup from './EventCardPopup.vue'
+
 export default {
   name: 'KazinoPanel',
+  components: { EventCardPopup },
   props: {
     state: { type: Object, required: true },
-    mySeat: { type: Number, required: true }
+    mySeat: { type: Number, required: true },
+    events: { type: Object, default: () => ({}) }
+  },
+  data() {
+    return { showCard: false }
   },
   computed: {
     pending() { return this.state.pending_kazino || null },
+    slug() { return this.pending ? (this.pending.slug || 'kazino') : '' },
     order() { return this.pending ? this.pending.order : [] },
     current() { return this.pending ? this.pending.order[this.pending.idx] : null },
     results() { return this.pending ? this.pending.results : {} },
@@ -54,4 +66,5 @@ export default {
 .btns button { border: none; border-radius: 0.5rem; padding: 0.5rem 0.9rem; cursor: pointer; background: #f2f2f2; }
 .btns button.primary { background: #2f6fed; color: #fff; }
 .btns button:disabled { opacity: 0.5; cursor: default; }
+.show-event { border: 1px solid #e8c97a; background: #fff; color: #8a6d3b; border-radius: 0.5rem; padding: 0.25rem 0.6rem; cursor: pointer; font-size: 0.85rem; margin-left: 0.5rem; }
 </style>

@@ -1,9 +1,11 @@
 <template>
+  <div>
   <div v-if="pending" class="exp panel">
     <h3>Взрыв! Проверка авторитета</h3>
+    <button class="show-event" @click="showCard = true">Показать событие</button>
     <p class="hint">Район {{ districtName }} · Пёс {{ pname(current) }} ({{ idx + 1 }} / {{ queue.length }})</p>
     <div v-if="value != null" class="die-wrap">
-      <DiceCube :key="idx + ':' + face" :face="face" :size="56" />
+      <DiceCube :key="idx + ':' + face + ':' + (pending.rolls || 0)" :face="face" :size="56" />
       <img :src="tokenImage" :alt="tokenLabel" :title="tokenLabel" class="tok-img" />
       <strong class="val">{{ value }}</strong>
     </div>
@@ -14,23 +16,31 @@
     </div>
     <p v-if="!myTurn" class="hint">Ход {{ pname(current) }}…</p>
   </div>
+  <EventCardPopup v-if="pending && showCard" :slug="slug" :events="events" @close="showCard = false" />
+</div>
 </template>
 
 <script>
 import { authorityTokenLabel } from '../board'
 import { authorityTokenImage } from '../assets'
 import DiceCube from './DiceCube.vue'
+import EventCardPopup from './EventCardPopup.vue'
 
 export default {
   name: 'EventExplosionPanel',
-  components: { DiceCube },
+  components: { DiceCube, EventCardPopup },
   props: {
     state: { type: Object, required: true },
     mySeat: { type: Number, required: true },
-    districts: { type: Object, default: () => ({}) }
+    districts: { type: Object, default: () => ({}) },
+    events: { type: Object, default: () => ({}) }
+  },
+  data() {
+    return { showCard: false }
   },
   computed: {
     pending() { return this.state.pending_event_explosion || null },
+    slug() { return this.pending ? (this.pending.slug || 'bezumny_piroman') : '' },
     queue() { return this.pending ? this.pending.queue : [] },
     idx() { return this.pending ? this.pending.idx : 0 },
     value() { return this.pending ? this.pending.value : null },
@@ -78,4 +88,5 @@ export default {
 .btns button { border: none; border-radius: 0.5rem; padding: 0.5rem 1rem; cursor: pointer; background: #f2f2f2; }
 .btns button.primary { background: #2f6fed; color: #fff; }
 .btns button:disabled { opacity: 0.5; cursor: default; }
+.show-event { border: 1px solid #e0a0a0; background: #fff; color: #b03030; border-radius: 0.5rem; padding: 0.25rem 0.6rem; cursor: pointer; font-size: 0.85rem; margin-left: 0.5rem; }
 </style>

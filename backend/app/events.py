@@ -37,10 +37,9 @@ def draw_and_resolve_event(state: GameState, rng: Rng, actor_seat: int = 0) -> N
     state.event_deck.discard.append(slug)
     if slug in MAY_EVENTS:
         state.pending_may_event = {"slug": slug, "acted": [], "done": []}
-    elif slug == "kazino":
-        pass  # pending_kazino уже выставлен в resolve_event
-    elif slug in EVENT_ROLL_EVENTS:
-        pass  # pending_event_roll уже выставлен в resolve_event
+    elif slug in ("kazino", *EVENT_ROLL_EVENTS, "bezumny_piroman"):
+        # сначала показать карту события, затем выполнить броски/эффект
+        state.pending_event = {"slug": slug, "acked": [], "next": slug, "actor_seat": actor_seat}
     else:
         state.pending_event = {"slug": slug, "acked": []}
 
@@ -83,17 +82,14 @@ def resolve_event(state: GameState, rng: Rng, slug: str, actor_seat: int = 0) ->
             _queue_repair(state, rng, actor_seat)
     # --- проверки авторитета ---
     elif slug in ("lotereya", "rozygrysh_prizov", "igra_s_nulevoy_summoy"):
-        _queue_event_roll(state, slug, actor_seat)
+        pass  # отложено: сначала карта события, затем _queue_event_roll
     elif slug == "kazino":
-        _queue_kazino(state, actor_seat)
+        pass  # отложено: сначала карта события, затем _queue_kazino
     # --- прочее ---
     elif slug == "bezumny_piroman":
-        d = rng.choice(state.board_districts)
-        state.districts[d].explosives.append({"owner": None, "active": False})
-        state.districts[d].mangy += 1
-        resources.explode_event(state, d)
+        pass  # отложено: сначала карта события, затем _bezumny_piroman
     elif slug == "russkaya_ruletka":
-        _queue_russkaya_ruletka(state, rng, actor_seat)
+        pass  # отложено: сначала карта события, затем _queue_russkaya_ruletka
     elif slug == "epidemiya":
         _epidemiya(state, rng)
     elif slug == "kollektory":
@@ -106,6 +102,37 @@ def resolve_event(state: GameState, rng: Rng, slug: str, actor_seat: int = 0) ->
         pass  # эффект через may_event_act
     else:
         raise CommandError(f"Неизвестное событие: {slug}")
+
+
+def ack_event(state: GameState, rng: Rng, seat: int) -> None:
+    """Подтвердить карту события; когда все подтвердили — выполнить отложенный эффект."""
+    pend = state.pending_event
+    if pend is None:
+        raise CommandError("Нет карты события для подтверждения")
+    if seat in pend.get("acked", []):
+        raise CommandError("Вы уже подтвердили")
+    pend.setdefault("acked", []).append(seat)
+    if len(pend["acked"]) < state.player_count:
+        return
+    nxt = pend.get("next")
+    actor_seat = pend.get("actor_seat", 0)
+    state.pending_event = None
+    if nxt in ("lotereya", "rozygrysh_prizov", "igra_s_nulevoy_summoy"):
+        _queue_event_roll(state, nxt, actor_seat)
+    elif nxt == "russkaya_ruletka":
+        _queue_russkaya_ruletka(state, rng, actor_seat)
+    elif nxt == "kazino":
+        _queue_kazino(state, actor_seat)
+    elif nxt == "bezumny_piroman":
+        _bezumny_piroman(state, rng)
+
+
+def _bezumny_piroman(state: GameState, rng: Rng) -> None:
+    """Безумный пироман: неактивная взрывчатка + шелудивый + взрыв в случайном районе."""
+    d = rng.choice(state.board_districts)
+    state.districts[d].explosives.append({"owner": None, "active": False})
+    state.districts[d].mangy += 1
+    resources.explode_event(state, d)
 
 
 def may_event_act(state: GameState, rng: Rng, seat: int, *,
@@ -352,7 +379,7 @@ def _queue_event_roll(state: GameState, slug: str, actor_seat: int) -> None:
     state.pending_event_roll = {
         "slug": slug,
         "order": [(actor_seat + i) % n for i in range(n)],
-        "idx": 0, "results": {}, "rolled": False, "target": None,
+        "idx": 0, "results": {}, "rolled": False, "target": None, "rolls": 0,
     }
 
 
@@ -361,7 +388,7 @@ def _queue_russkaya_ruletka(state: GameState, rng: Rng, actor_seat: int) -> None
     state.pending_event_roll = {
         "slug": "russkaya_ruletka",
         "order": [(actor_seat + i) % n for i in range(n)],
-        "idx": 0, "results": {}, "rolled": False,
+        "idx": 0, "results": {}, "rolled": False, "rolls": 0,
         "target": rng.roll(6),  # масть, которую нужно повторить
     }
 
@@ -385,6 +412,7 @@ def event_roll(state: GameState, rng: Rng, seat: int, action: str) -> None:
         else:
             pend["results"][str(current)] = tokens.authority_value(state, current, face)
             pend.setdefault("rewards", {})[str(current)] = tokens.is_white_face(state, current, face)
+        pend["rolls"] = pend.get("rolls", 0) + 1
         pend["rolled"] = True
         reactions.open_roll(state, current, "event")
     elif action == "ok":
@@ -482,6 +510,7 @@ def _epidemiya(state: GameState, rng: Rng) -> None:
 def _queue_kazino(state: GameState, actor_seat: int) -> None:
     n = state.player_count
     state.pending_kazino = {
+        "slug": "kazino",
         "pot": 0, "results": {}, "order": [(actor_seat + i) % n for i in range(n)],
         "idx": 0, "rolled": False, "rerolled": False,
     }

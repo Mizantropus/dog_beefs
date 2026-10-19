@@ -151,7 +151,7 @@ def explode_event(state: GameState, district_id: int) -> None:
             queue.append(seat)
     if not queue:
         return
-    state.pending_event_explosion = {"district_id": district_id, "queue": queue, "idx": 0, "value": None}
+    state.pending_event_explosion = {"slug": "bezumny_piroman", "district_id": district_id, "queue": queue, "idx": 0, "value": None, "rolls": 0}
 
 
 def event_explosion_roll(state: GameState, rng: Rng, seat: int) -> None:
@@ -166,6 +166,7 @@ def event_explosion_roll(state: GameState, rng: Rng, seat: int) -> None:
     face = rng.roll(6)
     pe["face"] = face
     pe["value"] = tokens.authority_value(state, seat, face)
+    pe["rolls"] = pe.get("rolls", 0) + 1
     from . import reactions
     reactions.open_roll(state, seat, "explosion")
 

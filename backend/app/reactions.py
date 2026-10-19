@@ -306,13 +306,18 @@ def _close_roll(state: GameState, rng: Rng, pending: dict) -> None:
         pe = state.pending_event_explosion
         if pe is not None and pe["value"] is not None:
             seat = pe["queue"][pe["idx"]]
-            pe["value"] = tokens.authority_check(state, rng, seat)
+            face = rng.roll(6)
+            pe["face"] = face
+            pe["value"] = tokens.authority_value(state, seat, face)
+            pe["rolls"] = pe.get("rolls", 0) + 1
     elif kind == "event":
         from . import tokens
         pe = state.pending_event_roll
         if pe is not None and pe["rolled"]:
             current = pe["order"][pe["idx"]]
             face = rng.roll(6)
+            pe.setdefault("faces", {})[str(current)] = face
+            pe["rolls"] = pe.get("rolls", 0) + 1
             if pe["slug"] == "russkaya_ruletka":
                 pe["results"][str(current)] = face
                 pe.setdefault("rewards", {})[str(current)] = False
@@ -325,6 +330,10 @@ def _close_roll(state: GameState, rng: Rng, pending: dict) -> None:
         if pk is not None and pk["rolled"]:
             current = pk["order"][pk["idx"]]
             pk["results"][str(current)] = tokens.authority_check(state, rng, current)
+    # можно перебросить ещё раз, пока на руках есть карта «Перебросить кубик»
+    seat = pending.get("seat")
+    if seat is not None and has_situational(state, seat, "reroll"):
+        open_roll(state, seat, kind)
 
 
 def _close_dog_killed(state: GameState, pending: dict) -> None:

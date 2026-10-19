@@ -44,7 +44,7 @@
       <MoveChoicePanel :state="state" :my-seat="mySeat" :districts="districtMap" @command="send" />
       <TokenSwapPanel :state="state" :my-seat="mySeat" @command="send" />
       <MayEventPanel :state="state" :my-seat="mySeat" :districts="districtMap" :events="eventsMap" @command="send" />
-      <KazinoPanel :state="state" :my-seat="mySeat" @command="send" />
+      <KazinoPanel :state="state" :my-seat="mySeat" :events="eventsMap" @command="send" />
       <ChoicePanel :state="state" :my-seat="mySeat" :districts="districtMap" @command="send" />
       <DiscardModal v-if="showDiscard" :state="state" :actions="actionMap" @close="showDiscard = false" />
       <div v-if="viewSeat !== null" class="board-modal" @click.self="viewSeat = null">
@@ -57,7 +57,7 @@
       <EventPanel :state="state" :my-seat="mySeat" :events="eventsMap" @command="send" />
       <EventRollPanel :state="state" :my-seat="mySeat" :events="eventsMap" @command="send" />
       <PenaltyPanel :state="state" :my-seat="mySeat" @command="send" />
-      <EventExplosionPanel :state="state" :my-seat="mySeat" :districts="districtMap" @command="send" />
+      <EventExplosionPanel :state="state" :my-seat="mySeat" :districts="districtMap" :events="eventsMap" @command="send" />
 
       <DraftPanel
         v-if="state.phase === 'draft'"

@@ -824,9 +824,7 @@ class AckEventCommand(Command):
             raise CommandError("Вы уже подтвердили")
 
     def apply(self, state: GameState, rng: Rng) -> GameState:
-        state.pending_event["acked"].append(self.seat)
-        if len(state.pending_event["acked"]) >= state.player_count:
-            state.pending_event = None
+        events.ack_event(state, rng, self.seat)
         return state
 
 

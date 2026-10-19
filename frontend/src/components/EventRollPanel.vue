@@ -1,6 +1,8 @@
 <template>
+  <div>
   <div v-if="pending" class="roll panel">
     <h3>{{ title }}</h3>
+    <button class="show-event" @click="showCard = true">Показать событие</button>
     <p v-if="isRuletka" class="hint">Целевая масть: <img :src="dieFaceImage(target)" :alt="suitSymbol(target)" class="die-img" /></p>
     <p class="turn">Ходит: {{ pname(current) }}</p>
 
@@ -11,7 +13,7 @@
     <div v-else class="result">
       <p class="die-line">
         Выпало:
-        <DiceCube :key="current + ':' + currentFace" :face="currentFace" :size="56" />
+        <DiceCube :key="current + ':' + currentFace + ':' + (pending.rolls || 0)" :face="currentFace" :size="56" />
         <template v-if="!isRuletka">
           <img :src="tokenImage" :alt="tokenLabel" :title="tokenLabel" class="tok-img" />
           <strong class="val">{{ result }}</strong>
@@ -24,23 +26,26 @@
 
     <p class="results">{{ resultsSummary }}</p>
   </div>
+  <EventCardPopup v-if="pending && showCard" :slug="slug" :events="events" @close="showCard = false" />
+</div>
 </template>
 
 <script>
 import { DIE_SYMBOLS, AUTHORITY_TOKEN_VALUES, authorityTokenLabel } from '../board'
 import { dieFaceImage, authorityTokenImage } from '../assets'
 import DiceCube from './DiceCube.vue'
+import EventCardPopup from './EventCardPopup.vue'
 
 export default {
   name: 'EventRollPanel',
-  components: { DiceCube },
+  components: { DiceCube, EventCardPopup },
   props: {
     state: { type: Object, required: true },
     mySeat: { type: Number, required: true },
     events: { type: Object, default: () => ({}) }
   },
   data() {
-    return { DIE_SYMBOLS }
+    return { DIE_SYMBOLS, showCard: false }
   },
   computed: {
     pending() { return this.state.pending_event_roll || null },
@@ -120,4 +125,5 @@ export default {
 .die-line { margin: 0.4rem 0; }
 .results { color: #666; font-size: 0.85rem; margin-top: 0.5rem; }
 .badge { display: inline-block; background: #f0b429; color: #fff; border-radius: 0.4rem; padding: 0.1rem 0.4rem; font-size: 0.75rem; margin-left: 0.3rem; }
+.show-event { border: 1px solid #9bc4ff; background: #fff; color: #2f6fed; border-radius: 0.5rem; padding: 0.25rem 0.6rem; cursor: pointer; font-size: 0.85rem; margin-left: 0.5rem; }
 </style>
