@@ -1,5 +1,6 @@
 <template>
   <div class="game">
+    <div v-if="showTurn" :key="turnSeq" class="your-turn" :style="{ color: turnColor }">Ваш ход</div>
     <div v-if="error" class="err-backdrop" @click.self="error = ''">
       <div class="err-modal">
         <p class="err-text">{{ error }}</p>
@@ -126,6 +127,7 @@ import { api } from '../api'
 import { connectGame, sendCommand } from '../ws'
 import { loadActions } from '../actions'
 import { actionCardBack, eventCardBack } from '../assets'
+import { PLAYER_COLORS } from '../board'
 import Board from './Board.vue'
 import PlayersPanel from './PlayersPanel.vue'
 import PlayerBoard from './PlayerBoard.vue'
@@ -184,7 +186,9 @@ export default {
       error: '',
       playCard: null,
       viewSeat: null,
-      showDiscard: false
+      showDiscard: false,
+      showTurn: false,
+      turnSeq: 0
     }
   },
   computed: {
@@ -192,7 +196,22 @@ export default {
       return PHASES[this.state.phase] || this.state.phase
     },
     actionDraw() { return (this.state.action_deck && this.state.action_deck.draw) || [] },
-    eventDraw() { return (this.state.event_deck && this.state.event_deck.draw) || [] }
+    eventDraw() { return (this.state.event_deck && this.state.event_deck.draw) || [] },
+    turnSig() {
+      const s = this.state
+      return s ? (s.phase + '|' + s.current_seat) : ''
+    },
+    turnColor() {
+      return PLAYER_COLORS[this.mySeat] || '#2f6fed'
+    }
+  },
+  watch: {
+    turnSig(newSig, oldSig) {
+      if (!oldSig) return
+      if (newSig !== oldSig && this.state && this.state.phase === 'play' && this.state.current_seat === this.mySeat) {
+        this.triggerTurn()
+      }
+    }
   },
   async mounted() {
     try {
@@ -250,6 +269,12 @@ export default {
       this.abilityDistrict = districtId
       this.abilityMode = 'resolve_kompromat'
     },
+    triggerTurn() {
+      this.turnSeq++
+      this.showTurn = true
+      clearTimeout(this._turnTimer)
+      this._turnTimer = setTimeout(() => { this.showTurn = false }, 1000)
+    },
     back() {
       localStorage.removeItem('st_game')
       localStorage.removeItem('st_code')
@@ -277,4 +302,24 @@ export default {
 .err-ok { width: 100%; border: none; border-radius: 0.5rem; padding: 0.55rem; cursor: pointer; background: #2f6fed; color: #fff; font-size: 1rem; }
 .board-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; z-index: 20; }
 .board-modal-box { background: #fff; border-radius: 0.75rem; padding: 1.25rem; width: 92vw; max-width: 70rem; max-height: 94vh; overflow: auto; }
+.your-turn {
+  position: fixed;
+  top: 42%;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: clamp(3.5rem, 12vw, 8rem);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  pointer-events: none;
+  z-index: 120;
+  text-shadow: 0 3px 18px rgba(0, 0, 0, 0.28);
+  animation: yourTurn 1s ease-out forwards;
+}
+@keyframes yourTurn {
+  0%   { opacity: 0; transform: scale(0.6); }
+  15%  { opacity: 0.8; transform: scale(1.05); }
+  30%  { opacity: 0.8; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.4); }
+}
 </style>
