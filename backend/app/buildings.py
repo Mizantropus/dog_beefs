@@ -118,7 +118,15 @@ def use_ability(state: GameState, rng: Rng, seat: int, district_id: int, target_
             if not state.action_deck.discard:
                 raise CommandError("Колода сброса пуста")
             p.money -= cost
-            p.hand.append(state.action_deck.discard.pop())
+            cards = []
+            for _ in range(2):
+                if state.action_deck.discard:
+                    cards.append(state.action_deck.discard.pop())
+            if len(cards) == 1:
+                p.hand.append(cards[0])
+            else:
+                state.pending_discard_buy = {"seat": seat, "cards": cards, "district_id": district_id}
+                return  # used_abilities пометится в PickDiscardBuyCommand
         else:
             cost = ability.get("explosive_cost", 600)
             if p.money < cost:

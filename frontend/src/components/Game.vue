@@ -66,6 +66,13 @@
         :actions="actionMap"
         @command="send"
       />
+      <DiscardBuyPanel
+        v-if="state.pending_discard_buy"
+        :state="state"
+        :my-seat="mySeat"
+        :actions="actionMap"
+        @command="send"
+      />
       <CombatPanel
         v-if="state.combat"
         :state="state"
@@ -123,6 +130,7 @@ import Board from './Board.vue'
 import PlayersPanel from './PlayersPanel.vue'
 import PlayerBoard from './PlayerBoard.vue'
 import DraftPanel from './DraftPanel.vue'
+import DiscardBuyPanel from './DiscardBuyPanel.vue'
 import HandPanel from './HandPanel.vue'
 import CardPlayModal from './CardPlayModal.vue'
 import CombatPanel from './CombatPanel.vue'
@@ -157,7 +165,7 @@ const PHASES = {
 
 export default {
   name: 'Game',
-  components: { Board, PlayersPanel, PlayerBoard, DraftPanel, HandPanel, CardPlayModal, CombatPanel, ReactionPanel, InfluencePanel, AbilitiesPanel, AbilityModal, KompromatPropertyPanel, KompromatRollPanel, SwapPanel, DiscardModal, PlacePanel, MovePanel, MoveChoicePanel, TokenSwapPanel, MayEventPanel, KazinoPanel, ChoicePanel, EventPanel, EventExplosionPanel, EventRollPanel, PenaltyPanel, PeekPanel },
+  components: { Board, PlayersPanel, PlayerBoard, DraftPanel, DiscardBuyPanel, HandPanel, CardPlayModal, CombatPanel, ReactionPanel, InfluencePanel, AbilitiesPanel, AbilityModal, KompromatPropertyPanel, KompromatRollPanel, SwapPanel, DiscardModal, PlacePanel, MovePanel, MoveChoicePanel, TokenSwapPanel, MayEventPanel, KazinoPanel, ChoicePanel, EventPanel, EventExplosionPanel, EventRollPanel, PenaltyPanel, PeekPanel },
   props: {
     gameId: { type: String, required: true },
     token: { type: String, required: true }

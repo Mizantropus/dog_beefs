@@ -87,6 +87,8 @@ class EndTurnCommand(Command):
             raise CommandError("Сначала выберите район после «Проход запрещён»")
         if state.pending_event_explosion is not None:
             raise CommandError("Сначала завершите взрыв")
+        if state.pending_discard_buy is not None:
+            raise CommandError("Сначала выберите карту из сброса")
 
     def apply(self, state: GameState, rng: Rng) -> GameState:
         if state.passes_in_a_row >= state.player_count:
@@ -543,6 +545,31 @@ class ResolvePeekCommand(Command):
         return state
 
 
+class PickDiscardBuyCommand(Command):
+    """Логово: выбрать одну из двух купленных карт сброса (вторая вернётся наверх)."""
+
+    type: Literal["pick_discard_buy"] = "pick_discard_buy"
+    card_id: str
+
+    def validate(self, state: GameState) -> None:
+        pdb = state.pending_discard_buy
+        if pdb is None or pdb["seat"] != self.seat:
+            raise CommandError("Нет выбора карты из сброса")
+        if self.card_id not in pdb["cards"]:
+            raise CommandError("Такой карты нет в выборе")
+
+    def apply(self, state: GameState, rng: Rng) -> GameState:
+        pdb = state.pending_discard_buy
+        state.pending_discard_buy = None
+        for cid in pdb["cards"]:
+            if cid == self.card_id:
+                state.players[self.seat].hand.append(cid)
+            else:
+                state.action_deck.discard.append(cid)
+        state.players[self.seat].used_abilities.append(pdb["district_id"])
+        return state
+
+
 class ResolveChoiceCommand(Command):
     """Выбор игрока (мост и т.п.)."""
 
@@ -848,6 +875,7 @@ AnyCommand = Annotated[
           UseAbilityCommand, StartCombatCommand, RollCombatDieCommand,
           ResolveCombatRollCommand, PlaySituationalCommand, PassReactionCommand,
           ChooseInfluenceTokenCommand, ResolveKompromatCommand, ResolvePeekCommand,
+          PickDiscardBuyCommand,
           ResolveSwapCommand,
           ResolvePlaceCommand,
           ResolveMoveCommand,

@@ -113,6 +113,7 @@ class GameState(BaseModel):
     pending_combat_result: dict | None = None  # результат жетона боя: {roller, effect}
     pending_event_roll: dict | None = None    # пошаговый бросок в событии: {slug, order, idx, results, rolled, target}
     pending_peek: dict | None = None        # Радиостанция: просмотр 2 карт событий
+    pending_discard_buy: dict | None = None  # Логово: выбор из 2 верхних карт сброса {seat, cards, district_id}
     pending_event: dict | None = None         # карта события для подтверждения: {slug, acked}
     players: list[PlayerState] = []
     districts: dict[int, DistrictState] = {}  # номер гекса -> район
