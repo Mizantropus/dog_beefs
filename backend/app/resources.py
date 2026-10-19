@@ -180,6 +180,8 @@ def event_explosion_ok(state: GameState, rng: Rng, seat: int) -> None:
         raise CommandError("Не ваш бросок")
     if pe["value"] is None:
         raise CommandError("Сначала бросьте кубик")
+    if state.pending_reaction is not None and state.pending_reaction.get("trigger") == "roll":
+        state.pending_reaction = None
     district_id = pe["district_id"]
     if pe["value"] <= 3:
         from . import reactions

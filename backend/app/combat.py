@@ -91,6 +91,9 @@ def resolve_roll(state: GameState, rng: Rng, flip: bool, move_seat: int | None =
     if flip:
         _spend_kompromat(state, roller, c)
     c.pending = None
+    # игрок решил оставить грань — закрыть окно «Перебросить кубик», если оно ещё открыто
+    if state.pending_reaction is not None and state.pending_reaction.get("trigger") == "roll":
+        state.pending_reaction = None
     applied = _apply_combat_effect(state, roller, face, move_seat, move_to)
     if applied and state.pending_reaction is None:
         _advance(state)

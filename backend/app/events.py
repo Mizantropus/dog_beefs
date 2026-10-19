@@ -418,6 +418,8 @@ def event_roll(state: GameState, rng: Rng, seat: int, action: str) -> None:
     elif action == "ok":
         if not pend["rolled"]:
             raise CommandError("Сначала бросьте")
+        if state.pending_reaction is not None and state.pending_reaction.get("trigger") == "roll":
+            state.pending_reaction = None
         _advance_event_roll(state, rng)
     else:
         raise CommandError("Неизвестное действие")
