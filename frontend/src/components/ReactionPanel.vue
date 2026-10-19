@@ -1,10 +1,12 @@
 <template>
   <div v-if="pending && !amIEligible(state, mySeat)" class="reaction panel waiting">
     <h3>Реакция: {{ triggerLabel }}</h3>
+    <p v-if="contextText" class="context">{{ contextText }}</p>
     <p class="hint">Ожидайте ответа других игроков…</p>
   </div>
   <div v-else-if="pending && amIEligible(state, mySeat)" class="reaction panel">
     <h3>Реакция: {{ triggerLabel }}</h3>
+    <p v-if="contextText" class="context">{{ contextText }}</p>
     <p class="hint">Можете ответить ситуативной картой или пропустить.</p>
     <div class="actions">
       <div v-for="a in playableActions" :key="a" class="action-row">
@@ -29,7 +31,8 @@ export default {
   name: 'ReactionPanel',
   props: {
     state: { type: Object, required: true },
-    mySeat: { type: Number, required: true }
+    mySeat: { type: Number, required: true },
+    districts: { type: Object, default: () => ({}) }
   },
   computed: {
     pending() {
@@ -37,6 +40,24 @@ export default {
     },
     triggerLabel() {
       return (this.pending && (TRIGGER_LABELS[this.pending.trigger] || this.pending.trigger)) || ''
+    },
+    contextText() {
+      const p = this.pending
+      if (!p) return ''
+      if (p.trigger === 'moved_into') {
+        const mover = this.pname(p.mover)
+        const from = this.districtName(p.from_district)
+        const to = this.districtName(p.to_district)
+        const parts = []
+        if (p.dogs_count) parts.push(p.dogs_count + ' псов')
+        if (p.mangy_count) parts.push(p.mangy_count + ' шелудивых')
+        const what = parts.length ? parts.join(' и ') : 'фишки'
+        return 'Игрок ' + mover + ' хочет переместить из ' + from + ' в ' + to + ' ' + what
+      }
+      if (p.trigger === 'combat_started') {
+        return 'Игрок ' + this.pname(p.attacker) + ' хочет начать с вами бой в районе ' + this.districtName(p.district_id)
+      }
+      return ''
     },
     allowedActions() {
       return (this.pending && TRIGGER_ACTIONS[this.pending.trigger]) || []
@@ -68,6 +89,11 @@ export default {
       const p = (this.state.players || [])[Number(seat)]
       return (p && p.name) || ('Игрок ' + (Number(seat) + 1))
     },
+    districtName(id) {
+      if (id == null) return '?'
+      const nm = (this.districts[id] && this.districts[id].name) || ''
+      return nm ? (id + ' · ' + nm) : ('Район ' + id)
+    },
     amIEligible,
     actionLabel(a) {
       return SITUATIONAL_LABELS[a] || a
@@ -95,6 +121,7 @@ export default {
 
 <style scoped>
 .panel { background: #fff6e6; border: 1px solid #e8c97a; border-radius: 0.75rem; padding: 1rem; margin-top: 1rem; }
+.context { color: #333; font-weight: 600; margin: 0.4rem 0 0; }
 .hint { color: #8a6d3b; margin: 0.3rem 0 0.6rem; }
 .btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .btns button {

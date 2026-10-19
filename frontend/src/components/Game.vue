@@ -28,7 +28,7 @@
       <PlayersPanel :state="state" :my-seat="mySeat" @view-board="viewSeat = $event" />
       <PlayerBoard :state="state" :my-seat="mySeat" />
 
-      <ReactionPanel :state="state" :my-seat="mySeat" @command="send" />
+      <ReactionPanel :state="state" :my-seat="mySeat" :districts="districtMap" @command="send" />
       <InfluencePanel :state="state" :my-seat="mySeat" @command="send" />
       <KompromatPropertyPanel
         :state="state"
