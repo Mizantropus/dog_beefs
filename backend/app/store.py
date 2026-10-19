@@ -10,14 +10,21 @@ class VersionConflict(Exception):
     """Снапшот устарел: кто-то уже изменил партию новее нашей версии."""
 
 
-def summarize(command: dict) -> str:
+def summarize(command: dict, state: GameState | None = None) -> str:
     """Короткое человекочитаемое описание хода (для журнала)."""
     seat = command.get("seat")
-    who = f"Игрок {seat + 1}" if isinstance(seat, int) else "Игрок"
+    if state is not None and isinstance(seat, int) and 0 <= seat < len(state.players):
+        who = state.players[seat].name or f"Игрок {seat + 1}"
+    elif isinstance(seat, int):
+        who = f"Игрок {seat + 1}"
+    else:
+        who = "Игрок"
     t = command.get("type")
     labels = {
         "pass": "пас",
+        "end_turn": "завершил ход",
         "pick_draft": "взял карту в драфте",
+        "discard_card": "сбросил карту",
         "play_card": "сыграл карту действия",
         "play_kompromat": "сыграл компромат",
         "start_combat": "начал бой",
@@ -27,6 +34,23 @@ def summarize(command: dict) -> str:
         "play_situational": "сыграл ситуативное действие",
         "pass_reaction": "пропустил реакцию",
         "choose_influence": "разыграл жетон влияния",
+        "resolve_kompromat": "разрешил компромат",
+        "resolve_peek": "завершил просмотр событий",
+        "pick_discard_buy": "выбрал карту из сброса",
+        "resolve_swap": "завершил обмен карты",
+        "resolve_place": "выбрал район",
+        "resolve_move": "завершил перемещение",
+        "resolve_move_choice": "выбрал район после «Проход запрещён»",
+        "event_explosion": "бросок при взрыве",
+        "resolve_token_swap": "обменял жетон влияния",
+        "may_event": "действие в событии",
+        "kazino": "ход в казино",
+        "resolve_choice": "сделал выбор",
+        "event_roll": "бросок в событии",
+        "ack_combat_result": "подтвердил результат боя",
+        "ack_mangy_roll": "подтвердил бросок шелудивых",
+        "ack_penalty": "подтвердил штраф",
+        "ack_event": "подтвердил карту события",
         "advance_phase": "сменил фазу",
     }
     return f"{who}: {labels.get(t, t)}"

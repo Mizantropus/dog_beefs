@@ -35,7 +35,7 @@ class GameEngine:
             except VersionConflict:
                 continue  # ретрай на свежей версии
             cmd = command.model_dump(mode="json")
-            await self.store.log_move(game_id, new_state.version, command.seat, cmd, summarize(cmd))
+            await self.store.log_move(game_id, new_state.version, command.seat, cmd, summarize(cmd, state))
             return new_state
         raise CommandError("Слишком много одновременных действий — попробуйте ещё раз")
 

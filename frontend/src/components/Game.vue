@@ -119,6 +119,8 @@
         @close="playCard = null"
       />
     </template>
+
+    <GameLog :game-id="gameId" :version="state ? state.version : 0" />
   </div>
 </template>
 
@@ -156,6 +158,7 @@ import EventRollPanel from './EventRollPanel.vue'
 import PenaltyPanel from './PenaltyPanel.vue'
 import EventExplosionPanel from './EventExplosionPanel.vue'
 import PeekPanel from './PeekPanel.vue'
+import GameLog from './GameLog.vue'
 
 const PHASES = {
   setup: 'Подготовка',
@@ -167,7 +170,7 @@ const PHASES = {
 
 export default {
   name: 'Game',
-  components: { Board, PlayersPanel, PlayerBoard, DraftPanel, DiscardBuyPanel, HandPanel, CardPlayModal, CombatPanel, ReactionPanel, InfluencePanel, AbilitiesPanel, AbilityModal, KompromatPropertyPanel, KompromatRollPanel, SwapPanel, DiscardModal, PlacePanel, MovePanel, MoveChoicePanel, TokenSwapPanel, MayEventPanel, KazinoPanel, ChoicePanel, EventPanel, EventExplosionPanel, EventRollPanel, PenaltyPanel, PeekPanel },
+  components: { Board, PlayersPanel, PlayerBoard, DraftPanel, DiscardBuyPanel, HandPanel, CardPlayModal, CombatPanel, ReactionPanel, InfluencePanel, AbilitiesPanel, AbilityModal, KompromatPropertyPanel, KompromatRollPanel, SwapPanel, DiscardModal, PlacePanel, MovePanel, MoveChoicePanel, TokenSwapPanel, MayEventPanel, KazinoPanel, ChoicePanel, EventPanel, EventExplosionPanel, EventRollPanel, PenaltyPanel, PeekPanel, GameLog },
   props: {
     gameId: { type: String, required: true },
     token: { type: String, required: true }
