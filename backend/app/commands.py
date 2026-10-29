@@ -33,7 +33,7 @@ class Command(BaseModel):
 
 
 class PassCommand(Command):
-    """Пас в фазе розыгрыша: пропустить ход без дохода."""
+    """Пас в фазе розыгрыша: пропустить ход без дохода и передать ход следующему."""
 
     type: Literal["pass"] = "pass"
 
@@ -48,6 +48,10 @@ class PassCommand(Command):
     def apply(self, state: GameState, rng: Rng) -> GameState:
         state.passes_in_a_row += 1
         state.players[self.seat].has_played = True
+        if state.passes_in_a_row >= state.player_count:
+            end_round(state, rng)
+        else:
+            next_turn(state)
         return state
 
 

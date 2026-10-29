@@ -7,6 +7,12 @@
         <button class="err-ok" @click="error = ''">ОК</button>
       </div>
     </div>
+    <div v-if="finished && !gameOverDismissed" class="over-backdrop">
+      <div class="over-modal" :class="iWon ? 'win' : 'lose'">
+        <p class="over-text">{{ resultText }}</p>
+        <button class="over-ok" @click="gameOverDismissed = true">ОК</button>
+      </div>
+    </div>
     <div v-if="!state" class="loading">Подключаемся к партии…</div>
     <template v-else>
       <div class="topbar">
@@ -191,7 +197,8 @@ export default {
       viewSeat: null,
       showDiscard: false,
       showTurn: false,
-      turnSeq: 0
+      turnSeq: 0,
+      gameOverDismissed: false
     }
   },
   computed: {
@@ -206,6 +213,17 @@ export default {
     },
     turnColor() {
       return PLAYER_COLORS[this.mySeat] || '#2f6fed'
+    },
+    finished() {
+      return this.state && this.state.phase === 'finished'
+    },
+    iWon() {
+      return this.state && (this.state.winners || []).indexOf(this.mySeat) >= 0
+    },
+    resultText() {
+      return this.iWon
+        ? 'Вы победили! Поздравляем!'
+        : 'Вы проиграли, но не расстраивайтесь! Повезёт в следующий раз!'
     }
   },
   watch: {
@@ -303,6 +321,12 @@ export default {
 .err-modal { background: #fff; border-radius: 0.75rem; padding: 1.25rem; width: 22rem; max-width: 92vw; box-shadow: 0 10px 40px rgba(0,0,0,0.25); }
 .err-text { color: #b03030; margin: 0.4rem 0 0.8rem; white-space: pre-line; }
 .err-ok { width: 100%; border: none; border-radius: 0.5rem; padding: 0.55rem; cursor: pointer; background: #2f6fed; color: #fff; font-size: 1rem; }
+.over-backdrop { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.55); display: flex; align-items: center; justify-content: center; z-index: 60; }
+.over-modal { background: #fff; border-radius: 0.9rem; padding: 2rem 1.8rem; width: 26rem; max-width: 92vw; text-align: center; box-shadow: 0 12px 44px rgba(0, 0, 0, 0.3); }
+.over-text { font-size: 1.3rem; font-weight: 700; margin: 0 0 1.3rem; line-height: 1.45; }
+.over-modal.win .over-text { color: #1a7f37; }
+.over-modal.lose .over-text { color: #555; }
+.over-ok { border: none; border-radius: 0.5rem; padding: 0.6rem 2.2rem; cursor: pointer; background: #2f6fed; color: #fff; font-size: 1rem; font-weight: 600; }
 .board-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; z-index: 20; }
 .board-modal-box { background: #fff; border-radius: 0.75rem; padding: 1.25rem; width: 92vw; max-width: 70rem; max-height: 94vh; overflow: auto; }
 .your-turn {
