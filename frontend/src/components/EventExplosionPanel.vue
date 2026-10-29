@@ -1,28 +1,28 @@
 <template>
   <div>
   <div v-if="pending" class="exp panel">
-    <h3>Взрыв! Проверка авторитета</h3>
+    <h3>{{ isDetonate ? 'Взрыв! Проверка боя' : 'Взрыв! Проверка авторитета' }}</h3>
     <button class="show-event" @click="showCard = true">Показать событие</button>
-    <p class="hint">Район {{ districtName }} · Пёс {{ pname(current) }} ({{ idx + 1 }} / {{ queue.length }})</p>
+    <p class="hint">Район {{ districtName }} · {{ subjectLabel }} ({{ idx + 1 }} / {{ queue.length }})</p>
     <div v-if="value != null" class="die-wrap">
       <DiceCube :key="idx + ':' + face + ':' + (pending.rolls || 0)" :face="face" :size="56" />
       <img :src="tokenImage" :alt="tokenLabel" :title="tokenLabel" class="tok-img" />
-      <strong class="val">{{ value }}</strong>
+      <strong v-if="!isDetonate" class="val">{{ value }}</strong>
     </div>
-    <p v-if="value != null" class="result">{{ value <= 3 ? 'Пёс погибает' : 'Пёс выживает' }}</p>
+    <p v-if="value != null" class="result">{{ resultText }}</p>
     <div class="btns">
       <button v-if="value == null" class="primary" :disabled="!myTurn" @click="roll">Бросить кубик</button>
       <button v-else class="primary" :disabled="!myTurn || reactionOpen" @click="ok">ОК</button>
     </div>
-    <p v-if="!myTurn" class="hint">Ход {{ pname(current) }}…</p>
+    <p v-if="!myTurn" class="hint">Ход {{ pname(roller) }}…</p>
   </div>
   <EventCardPopup v-if="pending && showCard" :slug="slug" :events="events" @close="showCard = false" />
 </div>
 </template>
 
 <script>
-import { authorityTokenLabel } from '../board'
-import { authorityTokenImage } from '../assets'
+import { authorityTokenLabel, COMBAT_TOKEN_LABELS } from '../board'
+import { authorityTokenImage, combatTokenImage } from '../assets'
 import DiceCube from './DiceCube.vue'
 import EventCardPopup from './EventCardPopup.vue'
 
@@ -41,12 +41,23 @@ export default {
   computed: {
     pending() { return this.state.pending_event_explosion || null },
     slug() { return this.pending ? (this.pending.slug || 'bezumny_piroman') : '' },
+    kind() { return this.pending ? (this.pending.kind || 'event') : 'event' },
+    isDetonate() { return this.kind === 'detonate' },
     queue() { return this.pending ? this.pending.queue : [] },
     idx() { return this.pending ? this.pending.idx : 0 },
     value() { return this.pending ? this.pending.value : null },
     face() { return this.pending && this.pending.face != null ? this.pending.face : 0 },
-    current() { return this.pending ? this.pending.queue[this.pending.idx] : null },
-    myTurn() { return this.current === this.mySeat },
+    entry() { return this.pending ? this.pending.queue[this.pending.idx] : null },
+    isMangy() { return !!(this.entry && this.entry.mangy) },
+    roller() {
+      if (!this.pending) return null
+      return this.isDetonate ? this.pending.owner : (this.entry ? this.entry.seat : null)
+    },
+    subjectLabel() {
+      if (this.isMangy) return 'Шелудивый'
+      return 'Пёс ' + this.pname(this.entry ? this.entry.seat : null)
+    },
+    myTurn() { return this.roller === this.mySeat },
     reactionOpen() { return !!this.state.pending_reaction },
     districtId() { return this.pending ? this.pending.district_id : null },
     districtName() {
@@ -56,18 +67,32 @@ export default {
       return nm ? (id + ' · ' + nm) : ('Район ' + id)
     },
     tokenKey() {
-      const p = (this.state.players || [])[this.current] || {}
-      return (p.authority_line || [])[this.face] || 'dummy'
+      const line = this.isDetonate ? 'combat_line' : 'authority_line'
+      const p = (this.state.players || [])[this.roller] || {}
+      return (p[line] || [])[this.face] || (this.isDetonate ? 'attack' : 'dummy')
     },
     tokenImage() {
-      return authorityTokenImage(this.tokenKey, this.current)
+      return this.isDetonate
+        ? combatTokenImage(this.tokenKey, this.roller)
+        : authorityTokenImage(this.tokenKey, this.roller)
     },
     tokenLabel() {
-      return authorityTokenLabel(this.tokenKey)
+      return this.isDetonate
+        ? (COMBAT_TOKEN_LABELS[this.tokenKey] || this.tokenKey)
+        : authorityTokenLabel(this.tokenKey)
+    },
+    resultText() {
+      if (this.value == null) return ''
+      if (this.isDetonate) {
+        if (this.value === 1) return this.isMangy ? 'Шелудивый погибает' : 'Пёс погибает'
+        return 'Выживает'
+      }
+      return this.value <= 3 ? 'Пёс погибает' : 'Пёс выживает'
     }
   },
   methods: {
     pname(seat) {
+      if (seat == null) return '—'
       const p = (this.state.players || [])[Number(seat)]
       return (p && p.name) || ('Игрок ' + (Number(seat) + 1))
     },

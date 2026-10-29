@@ -208,9 +208,6 @@ def close(state: GameState, rng: Rng) -> None:
         if resume == "combat_roll":
             from .combat import resume_combat_roll
             resume_combat_roll(state, rng)
-        elif resume == "explosion":
-            from . import resources
-            resources.resume_explosion(state, rng, pending)
         elif resume == "event_explosion":
             from . import resources
             resources.resume_event_explosion(state, pending)

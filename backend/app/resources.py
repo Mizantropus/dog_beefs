@@ -148,46 +148,61 @@ def explode_event(state: GameState, district_id: int) -> None:
     queue = []
     for seat in sorted(d.dogs.keys()):
         for _ in range(d.dogs[seat]):
-            queue.append(seat)
+            queue.append({"seat": seat, "mangy": False})
     if not queue:
         return
-    state.pending_event_explosion = {"slug": "bezumny_piroman", "district_id": district_id, "queue": queue, "idx": 0, "value": None, "rolls": 0}
+    state.pending_event_explosion = {"slug": "bezumny_piroman", "kind": "event", "district_id": district_id, "queue": queue, "idx": 0, "owner": None, "value": None, "rolls": 0}
 
 
 def event_explosion_roll(state: GameState, rng: Rng, seat: int) -> None:
-    """Бросок проверки авторитета за текущего пса."""
+    """Бросок за текущую фишку (пса или шелудивого)."""
     pe = state.pending_event_explosion
     if pe is None:
         raise CommandError("Нет взрыва")
-    if pe["queue"][pe["idx"]] != seat:
+    entry = pe["queue"][pe["idx"]]
+    kind = pe.get("kind", "event")
+    roller = pe["owner"] if kind == "detonate" else entry["seat"]
+    if roller != seat:
         raise CommandError("Не ваш бросок")
     if pe["value"] is not None:
         raise CommandError("Сначала нажмите ОК")
     face = rng.roll(6)
     pe["face"] = face
-    pe["value"] = tokens.authority_value(state, seat, face)
+    if kind == "detonate":
+        pe["value"] = 1 if tokens.is_explosion_death_face(state, pe["owner"], face) else 0
+    else:
+        pe["value"] = tokens.authority_value(state, entry["seat"], face)
     pe["rolls"] = pe.get("rolls", 0) + 1
     from . import reactions
-    reactions.open_roll(state, seat, "explosion")
+    reactions.open_roll(state, roller, "explosion")
 
 
 def event_explosion_ok(state: GameState, rng: Rng, seat: int) -> None:
-    """Применить результат (1–3 — гибель, с окном «Броник») и перейти дальше."""
+    """Применить результат взрыва и перейти к следующей фишке."""
     pe = state.pending_event_explosion
     if pe is None:
         raise CommandError("Нет взрыва")
-    if pe["queue"][pe["idx"]] != seat:
+    entry = pe["queue"][pe["idx"]]
+    kind = pe.get("kind", "event")
+    roller = pe["owner"] if kind == "detonate" else entry["seat"]
+    if roller != seat:
         raise CommandError("Не ваш бросок")
     if pe["value"] is None:
         raise CommandError("Сначала бросьте кубик")
     if state.pending_reaction is not None and state.pending_reaction.get("trigger") == "roll":
         state.pending_reaction = None
     district_id = pe["district_id"]
-    if pe["value"] <= 3:
+    dies = (pe["value"] == 1) if kind == "detonate" else (pe["value"] <= 3)
+    if dies:
         from . import reactions
-        if reactions.open_dog_killed(state, seat, district_id, resume="event_explosion"):
-            return  # окно броника; close убьёт/спасёт и продолжит
-        _remove_dog(state, seat, district_id)
+        if entry["mangy"]:
+            d = state.districts[district_id]
+            if d.mangy >= 1:
+                d.mangy -= 1
+        else:
+            if reactions.open_dog_killed(state, entry["seat"], district_id, resume="event_explosion"):
+                return  # окно броника; close убьёт/спасёт и продолжит
+            _remove_dog(state, entry["seat"], district_id)
     _advance_event_explosion(state)
 
 
@@ -211,30 +226,28 @@ def resume_event_explosion(state: GameState, pending: dict) -> None:
 
 
 def explode(state: GameState, rng: Rng, district_id: int, owner: int = 0) -> None:
-    """Детонация: владелец бросает кубик за каждого пса (грань атаки или чёрная — гибель; броник спасает)."""
+    """Детонация: владелец бросает боевой кубик за каждого пса и шелудивого в районе."""
     d = state.districts[district_id]
-    queue = [seat for seat in list(d.dogs.keys()) for _ in range(d.dogs[seat])]
-    _explode_step(state, rng, district_id, owner, queue)
-
-
-def _explode_step(state: GameState, rng: Rng, district_id: int, owner: int, queue: list[int]) -> None:
+    queue = []
+    for seat in sorted(d.dogs.keys()):
+        for _ in range(d.dogs[seat]):
+            queue.append({"seat": seat, "mangy": False})
+    for _ in range(d.mangy):
+        queue.append({"seat": None, "mangy": True})
     if not queue:
         from . import reactions
-        reactions.open_combat_ended(state, district_id)
+        reactions.trigger_cleanup(state, [district_id])
         return
-    seat = queue[0]
-    face = rng.roll(6)
-    if tokens.is_explosion_death_face(state, owner, face):
-        if reactions.open_dog_killed(state, seat, district_id, resume="explosion",
-                                     owner=owner, queue=queue[1:]):
-            return  # окно броника; close -> kill + resume_explosion
-        _remove_dog(state, seat, district_id)
-    _explode_step(state, rng, district_id, owner, queue[1:])
-
-
-def resume_explosion(state: GameState, rng: Rng, pending: dict) -> None:
-    """Продолжить взрыв после окна реакции (armor)."""
-    _explode_step(state, rng, pending["district_id"], pending["owner"], pending["queue"])
+    state.pending_event_explosion = {
+        "kind": "detonate",
+        "district_id": district_id,
+        "queue": queue,
+        "idx": 0,
+        "owner": owner,
+        "face": None,
+        "value": None,
+        "rolls": 0,
+    }
 
 
 def _remove_dog(state: GameState, seat: int, district_id: int) -> None:
