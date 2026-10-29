@@ -32,6 +32,46 @@ class Command(BaseModel):
         raise NotImplementedError
 
 
+def _validate_turn_clean(state: GameState) -> None:
+    """Нельзя передавать/завершать ход, пока есть неразрешённые реакции и эффекты."""
+    if state.combat is not None:
+        raise CommandError("Сначала завершите бой")
+    if state.pending_reaction is not None:
+        raise CommandError("Сначала разрешите реакции")
+    if state.pending_influence:
+        raise CommandError("Сначала разыграйте жетоны влияния")
+    if state.pending_kompromat is not None:
+        raise CommandError("Сначала разрешите бросок компромата")
+    if state.pending_swap is not None:
+        raise CommandError("Сначала завершите обмен карты")
+    if state.pending_event is not None:
+        raise CommandError("Сначала подтвердите карту события")
+    if state.pending_event_roll is not None:
+        raise CommandError("Сначала завершите бросок события")
+    if state.pending_may_event is not None:
+        raise CommandError("Сначала завершите событие")
+    if state.pending_kazino is not None:
+        raise CommandError("Сначала завершите казино")
+    if state.pending_choice is not None:
+        raise CommandError("Сначала сделайте выбор")
+    if state.pending_place is not None:
+        raise CommandError("Сначала завершите выбор района")
+    if state.pending_move is not None:
+        raise CommandError("Сначала завершите перемещение")
+    if state.pending_token_swap is not None:
+        raise CommandError("Сначала завершите обмен жетона")
+    if state.pending_move_choice is not None:
+        raise CommandError("Сначала выберите район после «Проход запрещён»")
+    if state.pending_event_explosion is not None:
+        raise CommandError("Сначала завершите взрыв")
+    if state.pending_penalty is not None:
+        raise CommandError("Сначала подтвердите штраф")
+    if state.pending_peek is not None:
+        raise CommandError("Сначала завершите просмотр событий")
+    if state.pending_discard_buy is not None:
+        raise CommandError("Сначала выберите карту из сброса")
+
+
 class PassCommand(Command):
     """Пас в фазе розыгрыша: пропустить ход без дохода и передать ход следующему."""
 
@@ -44,6 +84,7 @@ class PassCommand(Command):
             raise CommandError("Сейчас не ваш ход")
         if state.players[self.seat].has_played:
             raise CommandError("Вы уже сделали ход")
+        _validate_turn_clean(state)
 
     def apply(self, state: GameState, rng: Rng) -> GameState:
         state.passes_in_a_row += 1
@@ -65,34 +106,7 @@ class EndTurnCommand(Command):
             raise CommandError("Завершение хода доступно только в фазе розыгрыша")
         if state.current_seat != self.seat:
             raise CommandError("Сейчас не ваш ход")
-        if state.combat is not None:
-            raise CommandError("Сначала завершите бой")
-        if state.pending_kompromat is not None:
-            raise CommandError("Сначала разрешите бросок компромата")
-        if state.pending_swap is not None:
-            raise CommandError("Сначала завершите обмен карты")
-        if state.pending_event is not None:
-            raise CommandError("Сначала подтвердите карту события")
-        if state.pending_event_roll is not None:
-            raise CommandError("Сначала завершите бросок события")
-        if state.pending_may_event is not None:
-            raise CommandError("Сначала завершите событие")
-        if state.pending_kazino is not None:
-            raise CommandError("Сначала завершите казино")
-        if state.pending_choice is not None:
-            raise CommandError("Сначала сделайте выбор")
-        if state.pending_place is not None:
-            raise CommandError("Сначала завершите выбор района")
-        if state.pending_move is not None:
-            raise CommandError("Сначала завершите перемещение")
-        if state.pending_token_swap is not None:
-            raise CommandError("Сначала завершите обмен жетона")
-        if state.pending_move_choice is not None:
-            raise CommandError("Сначала выберите район после «Проход запрещён»")
-        if state.pending_event_explosion is not None:
-            raise CommandError("Сначала завершите взрыв")
-        if state.pending_discard_buy is not None:
-            raise CommandError("Сначала выберите карту из сброса")
+        _validate_turn_clean(state)
 
     def apply(self, state: GameState, rng: Rng) -> GameState:
         if state.passes_in_a_row >= state.player_count:
